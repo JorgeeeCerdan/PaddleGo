@@ -7,7 +7,7 @@ const {comprobarToken} = require("../controllers/authToken")
 // GET - Publica - Consulta de pistas
 pistaRouter.get("/pistas", (req,res)=>{
     pista.find({}, (err, pista) => {
-        if(err){res.status(400).send(err.response.data);}
+        if(err){res.status(400).send(`No se pudo mostrar las pistas del centro`);}
         res.json(pista);
     })
     .catch(console.log)
@@ -16,8 +16,9 @@ pistaRouter.get("/pistas", (req,res)=>{
 // GET - Privada - Consulta individual de pista
 pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
     const {params: {id}} = req
+    
     pista.findById((id), (err, pista) => {
-        if(err){res.status(400).send(err.response.data);}
+        if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
         res.json(pista);
     })
 })
@@ -30,12 +31,18 @@ pistaRouter.post("/pista", comprobarToken, (req,res) =>{
     const ubicacion = req.body.ubicacion;
     const capacidad = req.body.capacidad;
 
+    if(!nombre){ return res.status(403).send(`Error, se requiere nombre`)}
+    if(!estado){ return res.status(403).send(`Error, se requiere estado de la pista`)}
+    if(!tipo){ return res.status(403).send(`Error, se necesita expecificar que tipo de pista es`)}
+    if(!ubicacion){ return res.status(403).send(`Error, se necesita decir si la pista es outdoor o indoor`)}
+    if(!capacidad){ return res.status(403).send(`Error, se necesita expecificar la capacidad de la pista`)}
+
     const pista = new Pista({
-        nombre: nombre,
-        estado: estado,
-        tipo: tipo,
-        ubicacion: ubicacion,
-        capacidad: capacidad
+        nombre,
+        estado,
+        tipo,
+        ubicacion,
+        capacidad
     })
 
     pista.save()

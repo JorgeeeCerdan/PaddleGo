@@ -7,7 +7,7 @@ const {comprobarToken} = require("../controllers/authToken");
 // GET - Publica - Consulta de reservas
 reservaRouter.get("/reservas", (req, res) =>{
     Reserva.find({}, (err, reservas) => {
-        if(err){res.status(400).send(err.response.data);}
+        if(err){res.status(400).send(`No se pudo mostrar las reservas`);}
         res.json(reservas);
     })
     .catch(console.log)
@@ -17,6 +17,9 @@ reservaRouter.get("/reservas", (req, res) =>{
 reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
     const idUsuario =  req.body.idUsuario;
     const idPista =  req.body.idPista;
+
+    if(!idUsuario){ return res.status(403).send(`Error, no se encontro usuario asociado a la reserva`)}
+    if(!idPista){ return res.status(403).send(`Error, no se encontro pista asociada a la reserva`)}
 
     const reserva =  new Reserva({
         idUsuario:idUsuario,

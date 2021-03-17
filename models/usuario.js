@@ -9,13 +9,12 @@ const usuario = new Schema ({
         type: String,
         required: true,
         trim: true,
-        lowercase: true,
         minlength: 2
     },
     email:{
         type: String,
-        required: true,
-        unique: true,
+        required: [true, "Es necesario un email"],
+        unique: [true, "El email debe ser unico"],
         validate(email){
             if(!validator.isEmail(email)){
                 throw new Error (`Este correo no es valido`)
