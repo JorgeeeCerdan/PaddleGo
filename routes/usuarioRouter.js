@@ -1,13 +1,12 @@
+// Importación de modulos
 const express = require(`express`);
 const usuarioRouter = express.Router();
 const Usuario = require("../models/usuario.js");
-
 const bcrypt = require("bcrypt");
-const {validationId, validationEmail, validationPassword} = require("../validation/validation");
-
+const {validationId, validationEmail, validationPassword, validationTelefono} = require("../controllers/validation");
 const {crearToken, comprobarToken} = require(`../controllers/authToken`)
 
-// CONSULTA DE USUARIOS
+// GET - Publica - Consulta de usuarios
 usuarioRouter.get("/usuarios", (req, res) => {
     Usuario.find({}, (err, usuario) => {
         if(err){res.status(400).send(err.response.data);}
@@ -16,7 +15,7 @@ usuarioRouter.get("/usuarios", (req, res) => {
     .catch(console.error)
 })
 
-// CONSULTA INDIVIDUAL DE USUARIO
+// GET - Privada - Consulta de usuario individual
 usuarioRouter.get("/usuario/:id", comprobarToken, (req, res) => {
     const {params: {id}} = req
 
@@ -27,19 +26,16 @@ usuarioRouter.get("/usuario/:id", comprobarToken, (req, res) => {
     .catch(console.log)
 })
 
-// REGISTRO DE NUEVO USUARIO
+// POST - Publica - Registro de nuevos usuarios
 usuarioRouter.post("/registros", async (req,res) => {
 
-    // const { usuario: {nombre, email, password, telefono}} = req.body
-    const nombre = req.body.nombre;
-    const email = req.body.email;
-    const telefono = req.body.telefono;
-    const password = req.body.password;
-    
-    // HASH DESDE MODELO
-    // validationEmail(email)
-    // validationPassword(password)
+    const { usuario: { nombre, email, telefono, password }} = req.body
 
+    // HASH DESDE MODELO
+    validationEmail(email)
+    validationPassword(password)
+    validationTelefono(telefono)
+    
     // HASH DESDE RUTA
     const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -58,30 +54,49 @@ usuarioRouter.post("/registros", async (req,res) => {
     .catch(console.log)
 })
 
-// USUARIO LOGIN
+// POST - Publica - Inicio de sesión
 usuarioRouter.post("/login", async (req, res)=>{
     try {
+        validationEmail(req.body.email)
+        validationPassword(req.body.password)
+
         const usuario = await Usuario.findOne({email: req.body.email})
         
         if (!usuario){
-            res.status(400).json({message: "El usuario no existe"})
-        }
+            return res.status(401).json({message: "El usuario no existe"})
+        }            
         
-        if(usuario){
-            const compararPassword = await bcrypt.compare(req.body.password, usuario.password)
-            if (!compararPassword){
-                res.status(400).json({message: "Contraseña incorrecta"})
-            } else {
-                return res.status(200).send({token: crearToken(usuario)})
+        const compararPassword = await bcrypt.compare(req.body.password, usuario.password)
+        
+        if (!compararPassword){
+                return res.status(401).json({message: "Contraseña incorrecta"})
             }
-        } 
+                return res.status(200).send({token: crearToken(usuario)}) 
+
     } catch (error) {
-        console.log(error)
+        res.send(error.message)
     }
 })
 
-// BORRAR USUARIOS
-usuarioRouter.delete("/usuario/:id", (req,res) => {
+// PUT - Privada - Modificación de datos del usuario
+usuarioRouter.put("/usuario/:id", comprobarToken, (req,res) =>{
+    const {params:{id}} = req;
+    let bodyActualizado = req.body;
+    validationId(id)
+
+    Usuario.findByIdAndUpdate(id, bodyActualizado, (err,usuarioActualizado) =>{
+        if(err){res.status(500).send(`La cuenta no ha podido actualizarse: ${err.message}`)}
+        res.status(200).send(usuarioActualizado)
+
+        if(usuarioActualizado.id !== req.body.sub){
+            res.status(401).send(`No puedes actualizar los datos`)
+        }
+    })
+    .catch(console.log)
+})
+
+// DELETE - Privada - Borrar cuenta
+usuarioRouter.delete("/usuario/:id", comprobarToken, (req,res) => {
     const { params: { id } } = req
     validationId(id)
     Usuario.findByIdAndDelete(id)
@@ -89,18 +104,5 @@ usuarioRouter.delete("/usuario/:id", (req,res) => {
     .catch(console.log)  
 })
 
-// MODIFICACION DE CUENTA
-usuarioRouter.put("/usuario/:id", (req,res) =>{
-    const {params:{id}} = req;
-    validationId(id)
-    let bodyActualizado = req.body;
-
-    Usuario.findByIdAndUpdate(id, bodyActualizado, (err,usuarioActualizado) =>{
-        if(err){res.status(500).send(`La cuenta no ha podido actualizarse: ${err.message}`)}
-        res.status(200).send(usuarioActualizado)
-    })
-    .catch(console.log)
-})
-
-
+// Exportación de modulos
 module.exports = usuarioRouter;

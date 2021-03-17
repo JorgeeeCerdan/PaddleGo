@@ -1,8 +1,10 @@
+// Importación de modulos
 const express = require(`express`);
 const reservaRouter = express.Router();
 const Reserva = require("../models/reserva.js");
+const {comprobarToken} = require("../controllers/authToken");
 
-// CONSUTAR RESERVAS
+// GET - Publica - Consulta de reservas
 reservaRouter.get("/reservas", (req, res) =>{
     Reserva.find({}, (err, reservas) => {
         if(err){res.status(400).send(err.response.data);}
@@ -11,8 +13,24 @@ reservaRouter.get("/reservas", (req, res) =>{
     .catch(console.log)
 })
 
-// CONSULTAR UNA RESERVA
-reservaRouter.get("/reserva/:id",(req,res)=>{
+// POST - Privada - Realizar reserva de pista
+reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
+    const idUsuario =  req.body.idUsuario;
+    const idPista =  req.body.idPista;
+
+    const reserva =  new Reserva({
+        idUsuario:idUsuario,
+        idPista:idPista
+    })
+    
+    reserva.save()
+    .then(doc => console.log(doc))
+    .then(() => res.send(`Reserva realizada correctamente`))
+    .catch(console.error)
+})
+
+// GET - Privada - Consulta de reserva concreta realizada por el usuario
+reservaRouter.get("/reserva/:id", comprobarToken, (req,res)=>{
     const {params: {id}} = req
     Reserva.findById(id)
     .populate("idUsuario","nombre")
@@ -24,25 +42,8 @@ reservaRouter.get("/reserva/:id",(req,res)=>{
     .catch(console.log)
 })
 
-// HACER RESERVA
-reservaRouter.post("/reserva", (req, res) => {
-    const idUsuario = req.body.idUsuario;
-    const idPista = req.body.idPista;
-
-    const reserva = new Reserva({
-        idUsuario:idUsuario,
-        idPista:idPista
-    })
-
-    reserva.save()
-    .catch(console.log)
-    .then(doc => res.send(doc))
-    .then(() => res.send(`Reserva realizada correctamente`))
-})
-
-// SACAR LAS PISTAS RESERVADAS DEL USUARIO POR INDIVIDUAL
-// CUANTAS RESERVAS TIENE EL USUARIO
-reservaRouter.get("/reservas/usuario/:id", (req, res)=>{
+// GET - Privada - Historial de reservas realizadas por un usuario
+reservaRouter.get("/reservas/usuario/:id", comprobarToken, (req, res)=>{
     const {params: {id}} = req
     Reserva.find({idUsuario:id})
     .populate("idUsuario","nombre")
@@ -53,9 +54,8 @@ reservaRouter.get("/reservas/usuario/:id", (req, res)=>{
     })
 })
 
-// SACAR LAS PISTAS RESERVADAS DEL USUARIO POR INDIVIDUAL
-// CUANTAS VECES SE HA RESERVADO ESA PISTA + QUIEN LA HA RESERVADO
-reservaRouter.get("/reservas/pista/:id", (req, res)=>{
+// GET - Privada - Conocer cuantas veces se ha reservado la pista y por quien
+reservaRouter.get("/reservas/pista/:id", comprobarToken, (req, res)=>{
     const {params: {id}} = req
     Reserva.find({idPista:id})
     .populate("idUsuario","nombre")
@@ -64,18 +64,24 @@ reservaRouter.get("/reservas/pista/:id", (req, res)=>{
         if(err){res.status(400).send(err.message);}
        res.send(reservas)
     })
+})
+
+// DELETE - Privada - Borrar reserva realizada
+reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{
+    const { params: { id } } = req
+
+    Reserva.findById(id, (err, reserva) =>{
+        if(err){ 
+            return res.status(401).send('No se pudo borrar la reserva')
+        }
+        if(reserva.idUsuario === req.body._id){
+            return res.status(401).send(`Solamente quien hizo la reserva puede borrarla`)
+        }
+        reserva.deleteOne()
+        .then(() => res.send("Reserva borrada existosamente"))
+    })
     .catch(console.log)
 })
 
-// BORRAR RESERVA
-reservaRouter.delete("/reserva/:id", (req,res)=>{
-    const { params: { id } } = req
-    Reserva.findByIdAndDelete(id, (err)=>{
-        if(err){res.status(400).send(err.message);}
-    })
-    .catch(console.log)   
-    .then(() => res.send("Reserva borrada existosamente"))
-})
-
-
+// Exportación de modulos
 module.exports = reservaRouter

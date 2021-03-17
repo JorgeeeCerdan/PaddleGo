@@ -1,19 +1,24 @@
+// Importación de modulos
 const jwt = require(`jsonwebtoken`);
 const moment = require(`moment`)
 const { config } = require("dotenv");
 require(`dotenv`).config()
 const {env: {SECRET}} = process
 
+// Objeto Json Web Token
 const authToken = {
-    crearteToken(usuarioToken){
+
+    // Creación del Token
+    crearToken(usuarioToken){
         const payload = {
             sub: usuarioToken._id,
             iat: Date.now() / 1000
             // exp:
         }
-        return jwt.sign(payload, SECRET, {expiresIn: "2m"})
+        return jwt.sign(payload, SECRET, {expiresIn: "2h"})
     },
 
+    // Comprobación de Token
     comprobarToken(req, res, next){
         const token = req.headers[ "authorization"]
         if(!token){
@@ -32,5 +37,6 @@ const authToken = {
     }
 }
 
+// Exportación Json Web Token
 module.exports = authToken
 

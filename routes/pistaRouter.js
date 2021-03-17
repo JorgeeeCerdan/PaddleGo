@@ -1,8 +1,10 @@
+// Importación de modulos
 const express = require(`express`);
 const pistaRouter = express.Router();
 const pista = require("../models/pista.js");
+const {comprobarToken} = require("../controllers/authToken")
 
-// CONSULTAR LAS PISTAS
+// GET - Publica - Consulta de pistas
 pistaRouter.get("/pistas", (req,res)=>{
     pista.find({}, (err, pista) => {
         if(err){res.status(400).send(err.response.data);}
@@ -11,8 +13,8 @@ pistaRouter.get("/pistas", (req,res)=>{
     .catch(console.log)
 })
 
-// CONSULTA INDIVIDUAL DE PISTA
-pistaRouter.get("/pista/:id", (req, res) => {
+// GET - Privada - Consulta individual de pista
+pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
     const {params: {id}} = req
     pista.findById((id), (err, pista) => {
         if(err){res.status(400).send(err.response.data);}
@@ -20,8 +22,8 @@ pistaRouter.get("/pista/:id", (req, res) => {
     })
 })
 
-// AÑADIR PISTAS
-pistaRouter.post("/pista",(req,res) =>{
+// POST - Privada - Añadir pista de padel
+pistaRouter.post("/pista", comprobarToken, (req,res) =>{
     const nombre = req.body.nombre;
     const estado = req.body.estado;
     const tipo = req.body.tipo;
@@ -43,16 +45,16 @@ pistaRouter.post("/pista",(req,res) =>{
     // IR ERROR
 })
 
-// BORRAR PISTA / EN MANTEMINIENTO (DESHABILITAR)
-pistaRouter.delete("/pista/:id", (req,res)=>{
+// DELETE - Privada - Borrar pista
+pistaRouter.delete("/pista/:id", comprobarToken, (req,res)=>{
     const { params: { id } } = req
     pista.findByIdAndDelete(id)
     .catch(console.log)   
     .then(() => res.send("Pista borrada existosamente"))
 })
 
-// MODIFICACION ESTADO DE PISTA
-pistaRouter.put("/pista/:id", (req,res) =>{
+// PUT - Privada - Modificación de caracteristicas de una pista
+pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
     const {params:{id}} = req;
     const pistaModificacion = req.body;
 
@@ -63,6 +65,5 @@ pistaRouter.put("/pista/:id", (req,res) =>{
     .catch(console.log)
 })
 
-
-
+// Exportación de modulos
 module.exports = pistaRouter

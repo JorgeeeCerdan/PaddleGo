@@ -1,7 +1,9 @@
+// Importación de modulos
 const { Schema, model} = require(`mongoose`)
 const validator = require(`validator`);
 const bcrypt = require("bcrypt")
 
+// Creación Modelo Usuario
 const usuario = new Schema ({
     nombre:{
         type: String,
@@ -32,21 +34,18 @@ const usuario = new Schema ({
         minlength:4,
         maxlength:9
     }
-    // idReserva:[{
-    //     type: Schema.Types.ObjectId,
-    //     ref: `Reserva`
-    // }]
 })
 
-// OTRA MANERA DE BCRYPT EN MODELO
-// HASHEAR LA PASSWORD DESDE MODELO
-// usuario.pre("save", async function (next) {
-//     const usuario = this
-//     if (usuario.isModified("password")){
-//         usuario.password = await bcrypt.hash(usuario.password, 12)
-//     }
-//     next()
-// })
+/*
+    // Bcrypt desdes modelo
+    usuario.pre("save", async function (next) {
+        const usuario = this
+        if (usuario.isModified("password")){
+            usuario.password = await bcrypt.hash(usuario.password, 12)
+        }
+        next()
+    })
+*/
 
-
+// Exportación de modelo usuario
 module.exports = Usuario = model(`Usuario`, usuario)

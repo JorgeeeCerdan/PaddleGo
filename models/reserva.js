@@ -1,5 +1,7 @@
+// Importación de modulos
 const { Schema, model} = require(`mongoose`)
 
+// Creacion del Modelo Reserva
 const reserva = new Schema ({
     idUsuario:{
         type: Schema.Types.ObjectId,
@@ -15,4 +17,5 @@ const reserva = new Schema ({
     }
 })
 
+// Exportación de modelo reserva
 module.exports = Reserva = model(`Reserva`, reserva)
