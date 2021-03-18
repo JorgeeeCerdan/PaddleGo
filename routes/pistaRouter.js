@@ -4,10 +4,10 @@ const pistaRouter = express.Router();
 const pista = require("../models/pista.js");
 const {comprobarToken} = require("../controllers/authToken")
 
-// GET - Publica - Consulta de pistas
-pistaRouter.get("/pistas", (req,res)=>{
+// GET - Privada - Consulta de pistas
+pistaRouter.get("/pistas", comprobarToken, (req,res)=>{
     pista.find({}, (err, pista) => {
-        if(err){res.status(400).send(`No se pudo mostrar las pistas del centro`);}
+        if(err) res.status(400).send(`No se pudo mostrar las pistas del centro`);
         res.json(pista);
     })
     .catch(console.log)
@@ -49,7 +49,6 @@ pistaRouter.post("/pista", comprobarToken, (req,res) =>{
     .then(doc => res.send(doc))
     .catch(console.log)
     res.send("Nueva pista añadida") 
-    // IR ERROR
 })
 
 // DELETE - Privada - Borrar pista

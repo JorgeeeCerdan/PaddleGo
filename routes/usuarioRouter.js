@@ -6,24 +6,21 @@ const bcrypt = require("bcrypt");
 const {validationId, validationEmail, validationPassword, validationTelefono} = require("../controllers/validation");
 const {crearToken, comprobarToken} = require(`../controllers/authToken`);
 
-// GET - Publica - Consulta de usuarios
-usuarioRouter.get("/usuarios", (req, res) => {
-    Usuario.find({}, (err, usuario) => {
-        if(err){res.status(401).send(err.response.data);}
-        res.json(usuario);
+// GET - Privada - Consulta de usuarios
+usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
+    Usuario.find({}, (err, usuarios) => {
+        if(err) return res.status(401).send(`No es posible mostrarte todos los usuarios`);
+        if(usuarios) return res.json(usuarios);
     })
-    .catch(console.error)
 })
 
 // GET - Privada - Consulta de usuario individual
-usuarioRouter.get("/usuario/:id", comprobarToken, (req, res) => {
-    const {params: {id}} = req
-
-    Usuario.findById((id), (err, usuario) => {
-        if(err){res.status(400).send(err.response.data);}
-        res.json(usuario);
+usuarioRouter.get("/usuario", comprobarToken, (req, res) => {
+    const idUsuario = req.usuario.sub
+    Usuario.findById((idUsuario), (err, idUsuario) => {
+        if(err) return res.status(400).send(`No pudo accederse a tu perfil`);
+        if(idUsuario) return res.json(idUsuario);
     })
-    .catch(console.log)
 })
 
 // POST - Publica - Registro de nuevos usuarios
@@ -95,30 +92,24 @@ usuarioRouter.post("/login", async (req, res)=>{
 })
 
 // PUT - Privada - Modificación de datos del usuario
-usuarioRouter.put("/usuario/:id", comprobarToken, (req,res) =>{
-    const {params:{id}} = req;
+usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
+    const idUsuario = req.usuario.sub
     let bodyActualizado = req.body;
-    validationId(id)
 
-    Usuario.findByIdAndUpdate(id, bodyActualizado, (err,usuarioActualizado) =>{
-        if(err){res.status(500).send(`La cuenta no ha podido actualizarse`)}
-        res.status(200).send(usuarioActualizado)
-
-        if(usuarioActualizado.id !== req.body.sub){
-            res.status(401).send(`No puedes actualizar los datos`)
-        }
+    Usuario.findByIdAndUpdate(idUsuario, bodyActualizado, (err, usuarioActualizado) =>{
+        if(err) return res.status(401).send(`La cuenta no ha podido actualizarse`)
+        if(usuarioActualizado) return res.status(200).send(`La cuenta se ha actualizado`)
+        if(usuarioActualizado.id !== idUsuario) return res.status(401).send(`No puedes actualizar los datos`)
     })
-    .catch(console.log)
 })
 
 // DELETE - Privada - Borrar cuenta
-usuarioRouter.delete("/usuario/:id", comprobarToken, (req,res) => {
-    const { params: { id } } = req
-    validationId(id)
-
-    Usuario.findByIdAndDelete(id)
-    .then(() => res.send("Usuario borrado exitosamente"))
-    .catch(console.log)  
+usuarioRouter.delete("/usuario", comprobarToken, (req,res) => {
+    const borrarCuenta = req.usuario.sub
+    Usuario.findByIdAndDelete(borrarCuenta, (err, cuentaEliminada) =>{
+        if(err) return res.status(400).send(`Tu cuenta no pudo borrarse en estos momentos, pruebe mas tarde`)
+        if(cuentaEliminada) return res.send("Usuario borrado exitosamente")
+    })
 })
 
 // Exportación de modulos
