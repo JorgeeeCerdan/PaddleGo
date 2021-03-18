@@ -1,5 +1,4 @@
 # PaddleGo
-![logoApp](url.jpg)
 
 PaddleGo es la forma más rápida y sencilla de alquilar tu pista de padel para disfrutar con tus amigos, entrenar o competir. PaddleGo es un servicio de reservas destinado a botiques deportivas de padel. 
 
