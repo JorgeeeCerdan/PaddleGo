@@ -8,7 +8,6 @@ Si tu centro deportivo tiene pistas de padel, PaddelGo es lo que estas buscando.
 
 Características de PaddleGo:
 
-- Acceso a todas las páginas de la web.
 - Registro / Inicio de sesión.
 - Actualización, modificación y eliminación de perfil.
 - Selección de pista.
