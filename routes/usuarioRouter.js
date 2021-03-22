@@ -8,45 +8,61 @@ const {crearToken, comprobarToken} = require(`../controllers/authToken`);
 
 // GET - Privada - Consulta de usuarios
 usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
-    Usuario.find({}, (err, usuarios) => {
-        if(err) return res.status(401).send(`No es posible mostrarte todos los usuarios`);
-        if(usuarios) return res.json(usuarios);
-    })
+    try{
+        Usuario.find({}, (error, usuarios) => {
+            if(error) return res.status(400).send(`No es posible mostrarte todos los usuarios`)
+            else{ res.status(200).send({
+                message : `Lista de usuarios registrados`,
+                usuarios
+            })}
+        })
+    }
+    catch{
+        res.status(400).send({ message : `Error no se ha podido mostrar los usuarios`})
+    }
 })
 
 // GET - Privada - Consulta de usuario individual
 usuarioRouter.get("/usuario", comprobarToken, (req, res) => {
-    const idUsuario = req.usuario.sub
-    Usuario.findById((idUsuario), (err, idUsuario) => {
-        if(err) return res.status(400).send(`No pudo accederse a tu perfil`);
-        if(idUsuario) return res.json(idUsuario);
-    })
+    try{
+        const idUsuario = req.usuario.sub
+        Usuario.findById((idUsuario), (error, usuario) => {
+            if(error) res.status(400).send(`No se pudo mostrar el usuario`)
+            else { res.status(200).send({
+                message : `Información sobre ${usuario.nombre}`,
+                usuario
+            })}
+        })
+    }
+    catch{
+        res.status(400).send({ message : `Error no se ha podido mostrar el usuario ${usuario.nombre}`})
+    }
 })
 
 // POST - Publica - Registro de nuevos usuarios
-usuarioRouter.post("/registros", async (req,res) => {
+usuarioRouter.post("/registro", async (req,res) => {
  
     try{
-        const nombre = req.body.nombre
-        const email = req.body.email
-        const password = req.body.password
-        const telefono = req.body.telefono
+        const nombre = await req.body.nombre
+        const email = await req.body.email
+        const password = await req.body.password
+        const telefono = await req.body.telefono
         
-        if(!nombre){ return res.status(403).send(`Es necesario un nombre de usuario`)}
-        if(!email){ return res.status(403).send(`Es necesario un email`)}
-        if(!password){ return res.status(403).send(`Es necesario un password`)}
-        if(!telefono){ return res.status(403).send(`Es necesario un telefono de contacto`)}
+        if(!nombre) return res.status(400).send(`Es necesario un nombre de usuario`)
+        if(!email) return res.status(400).send(`Es necesario un email`)
+        if(!password) return res.status(400).send(`Es necesario un password`)
+        if(!telefono) return res.status(400).send(`Es necesario un telefono de contacto`)
 
         validationEmail(email)
         validationPassword(password)
         validationTelefono(telefono)
         
         const matchNombre = await Usuario.findOne({nombre})
-        if(matchNombre){ return res.status(403).send(`El nombre: ${nombre} introducido ya existe`)}
+        if(matchNombre){ return res.status(409).send(`El nombre: ${nombre} introducido ya existe`)}
         const matchEmail = await Usuario.findOne({email})
-        if(matchEmail){ return res.status(403).send(`El Email: ${email} introducido ya existe`)}
+        if(matchEmail){ return res.status(409).send(`El Email: ${email} introducido ya existe`)}
         const matchTelefono = await Usuario.findOne({telefono})
-        if(matchTelefono){ return res.status(403).send(`El telefono: ${telefono} introducido ya existe`)}
+        if(matchTelefono){ return res.status(409).send(`El telefono: ${telefono} introducido ya existe`)}
         
         // Hash password
         const salt = await bcrypt.genSalt(12);
@@ -61,19 +77,22 @@ usuarioRouter.post("/registros", async (req,res) => {
 
         usuario.save()
         .then(usuarioToken => {
-            res.status(200).send({token: crearToken(usuarioToken)})
+            if(usuarioToken) res.status(200).send({
+                message : `${usuario.nombre} tu cuenta fue creada correctamente`,
+                token: crearToken(usuarioToken)
+            })
         })
     }
-    catch(error){   
-        res.status(403).send(error.message)
+    catch{   
+        res.status(400).send({message: `Error al crear el usuario`})
     }
 })
 
 // POST - Publica - Inicio de sesión
 usuarioRouter.post("/login", async (req, res)=>{
     try {
-        const email = req.body.email
-        const password = req.body.password
+        const email = await req.body.email
+        const password = await req.body.password
 
         validationEmail(email)
         validationPassword(password)
@@ -84,10 +103,13 @@ usuarioRouter.post("/login", async (req, res)=>{
         const compararPassword = await bcrypt.compare(req.body.password, usuario.password)
         if (!compararPassword) return res.status(401).send("Contraseña incorrecta")
         
-        return res.status(200).send({token: crearToken(usuario)}) 
+        return res.status(200).send({
+            message: `Bienvenido a tu sesión ${usuario.nombre}`,
+            token: crearToken(usuario)
+        }) 
 
-    } catch (error) {
-        res.send(error.message)
+    } catch{
+        res.status(400).send(`Error al iniciar sesion, vuelva a intentarlo`)
     }
 })
 
@@ -97,8 +119,8 @@ usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
     let bodyActualizado = req.body;
 
     Usuario.findByIdAndUpdate(idUsuario, bodyActualizado, (err, usuarioActualizado) =>{
-        if(err) return res.status(401).send(`La cuenta no ha podido actualizarse`)
-        if(usuarioActualizado) return res.status(200).send(`La cuenta se ha actualizado`)
+        if(err) return res.status(400).send(`La cuenta no ha podido actualizarse`)
+        if(usuarioActualizado) return res.status(201).send(`La cuenta se ha actualizado`)
         if(usuarioActualizado.id !== idUsuario) return res.status(401).send(`No puedes actualizar los datos`)
     })
 })

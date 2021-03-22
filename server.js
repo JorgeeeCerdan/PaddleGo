@@ -28,14 +28,14 @@ mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifie
     // Middlewares
     server.use(morgan(`dev`)) 
     server.use(express.json())
-    // DEPRECATED - Ya no se usa server.use(express.urlencoded())
+    server.use(express.urlencoded())
     server.use(usuarioRouter)
     server.use(pistaRouter)
     server.use(reservaRouter)
     
     // Bienvenida
-    server.get("/", (req, res) => res.send("Bienvenido, servidor encendido"))
+    server.get("/", (req, res) => res.status(200).send({ message: "Bienvenido, servidor encendido"}))
     // Página consultada no existente
-    server.use(`*`, (req, res) => res.status(404).send(`Error 404. La página no existe`))
+    server.use(`*`, (req, res) => res.status(404).send({message:`Error 404. La página no existe`}))
     // Poner en escucha al server
-    server.listen(PORT, () => {console.log(`Servirdor corriendo en el puerto ${PORT}`)})
+    server.listen(PORT, () => {console.log(`Servidor corriendo en el puerto ${PORT}`)})

@@ -1,7 +1,5 @@
 // Importación de modulos
 const jwt = require(`jsonwebtoken`);
-const moment = require(`moment`)
-const { config } = require("dotenv");
 require(`dotenv`).config()
 const {env: {SECRET}} = process
 
@@ -21,19 +19,13 @@ const authToken = {
     // Comprobación de Token
     comprobarToken(req, res, next){
         const token = req.headers[ "authorization"]
-        if(!token){
-            res.status(400).send("No existe el token")
-        }
-        
-        if(token.expiresIn < Date.now()){
-            return res.status(400).send("El token expiro")
-        }
+        if(!token) return res.status(401).send({message:`Se requiere autorización`})
 
-        const decoded = jwt.verify(token.split(" ")[1], SECRET)
-        console.log(decoded)
-
-        req.usuario = decoded;
-        next()
+        jwt.verify(token.split(" ")[1], SECRET, (error, decoded) =>{
+            if(error) return res.status(401).send({message : `Inicia sesión para renovar tu autorización`})
+            req.usuario = decoded;
+            next()
+        })
     }
 }
 

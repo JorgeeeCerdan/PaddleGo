@@ -6,69 +6,107 @@ const {comprobarToken} = require("../controllers/authToken")
 
 // GET - Privada - Consulta de pistas
 pistaRouter.get("/pistas", comprobarToken, (req,res)=>{
-    pista.find({}, (err, pista) => {
-        if(err) res.status(400).send(`No se pudo mostrar las pistas del centro`);
-        res.json(pista);
-    })
-    .catch(console.log)
+    try{
+        pista.find({}, (err, pistas) => {
+            if(err) res.status(400).send(`No se pudo mostrar las pistas del centro`)
+            else{res.status(200).send({
+                message : `Lista de pistas`,
+                pistas
+            })}
+        })
+    }     
+    catch{
+        res.status(400).send({ message : `Error al mostrar las pistas solicitadas`})
+    }   
 })
 
 // GET - Privada - Consulta individual de pista
 pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
-    const {params: {id}} = req
-    
-    pista.findById((id), (err, pista) => {
-        if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
-        res.json(pista);
-    })
+    try{
+        const {params: {id}} = req
+        pista.findById((id), (err, pista) => {
+            if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
+            else {res.status(200).send({
+                message : `Consulta individual de pista`,
+                pista
+            })} 
+        })
+    }
+    catch{
+        res.status(400).send({ message : `Error al mostrar la pista solicitada`})
+    }
 })
 
 // POST - Privada - Añadir pista de padel
 pistaRouter.post("/pista", comprobarToken, (req,res) =>{
-    const nombre = req.body.nombre;
-    const estado = req.body.estado;
-    const tipo = req.body.tipo;
-    const ubicacion = req.body.ubicacion;
-    const capacidad = req.body.capacidad;
+    try{
+        const nombre = req.body.nombre;
+        const estado = req.body.estado;
+        const tipo = req.body.tipo;
+        const ubicacion = req.body.ubicacion;
+        const capacidad = req.body.capacidad;
 
-    if(!nombre){ return res.status(403).send(`Error, se requiere nombre`)}
-    if(!estado){ return res.status(403).send(`Error, se requiere estado de la pista`)}
-    if(!tipo){ return res.status(403).send(`Error, se necesita expecificar que tipo de pista es`)}
-    if(!ubicacion){ return res.status(403).send(`Error, se necesita decir si la pista es outdoor o indoor`)}
-    if(!capacidad){ return res.status(403).send(`Error, se necesita expecificar la capacidad de la pista`)}
+        if(!nombre){ return res.status(403).send(`Error, se requiere nombre`)}
+        if(!estado){ return res.status(403).send(`Error, se requiere estado de la pista`)}
+        if(!tipo){ return res.status(403).send(`Error, se necesita expecificar que tipo de pista es`)}
+        if(!ubicacion){ return res.status(403).send(`Error, se necesita decir si la pista es outdoor o indoor`)}
+        if(!capacidad){ return res.status(403).send(`Error, se necesita expecificar la capacidad de la pista`)}
 
-    const pista = new Pista({
-        nombre,
-        estado,
-        tipo,
-        ubicacion,
-        capacidad
-    })
+        const pista = new Pista({
+            nombre,
+            estado,
+            tipo,
+            ubicacion,
+            capacidad
+        })
 
-    pista.save()
-    .then(doc => res.send(doc))
-    .catch(console.log)
-    res.send("Nueva pista añadida") 
+        pista.save()
+        .then(pista => res.status(200).send({ 
+            message: `Pista creada correctamente y añadida`,
+            pista
+        }))
+    }    
+    catch{
+        res.status(400).send({ message : `Error al crear la pista`})
+    }
+
+})
+
+
+// PUT - Privada - Modificación de caracteristicas de una pista
+pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
+    try{
+        const {params:{id}} = req;
+        const pistaModificacion = req.body;
+        
+        pista.findByIdAndUpdate(id, pistaModificacion, (err, pistaActualizada) =>{
+            if(err) res.status(400).send(`La pista no ha podido actualizarse: ${err}`)
+            else{ res.status(201).send({
+                message : `La pista ha sido modificada`,
+                pistaActualizada
+            })}
+        })
+    }    
+    catch{
+        res.status(400).send({ message : `Error al modificar caracteristicas de la pista`})
+    }
 })
 
 // DELETE - Privada - Borrar pista
 pistaRouter.delete("/pista/:id", comprobarToken, (req,res)=>{
-    const { params: { id } } = req
-    pista.findByIdAndDelete(id)
-    .catch(console.log)   
-    .then(() => res.send("Pista borrada existosamente"))
-})
+    try{
+        const { params: { id } } = req
 
-// PUT - Privada - Modificación de caracteristicas de una pista
-pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
-    const {params:{id}} = req;
-    const pistaModificacion = req.body;
-
-    pista.findByIdAndUpdate(id, pistaModificacion, (err, pistaActualizada) =>{
-        if(err){res.status(500).send(`La pista no ha podido actualizarse: ${err}`)}
-        res.status(200).send(pistaActualizada)
-    })
-    .catch(console.log)
+        pista.findByIdAndDelete(id, (error) =>{
+            if(error) return res.status(400).send({message:'No se pudo borrar la reserva'})
+            
+            pista.deleteOne(pista)
+            .then( res.status(200).send({ message : `La reserva fue borrada existosamente.`}))
+        })
+    }
+    catch{
+        res.status(400).send({ message : `Error al borrar la pista`})
+    }
 })
 
 // Exportación de modulos

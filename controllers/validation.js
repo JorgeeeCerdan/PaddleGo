@@ -4,13 +4,14 @@ const Validation = {
     // Validación _id Mongo
     validationId(id){
         if( id.length < 24) throw new Error(`Id de usuario no correcta`)
+        if( id.length < 26) throw new Error(`Id de usuario no correcta`)
     },
 
     // Validación Password
     validationPassword(password){
-        if ( typeof password !== "string" ) throw new TypeError(`La password: ${password} no es valida`)
-        if ( !password.trim().length ) throw new Error(`La password: ${password} es erronea`)
-        if ( password.length < 3 ) throw new Error(`La password: ${password} tiene que ser mas segura `)
+        if ( typeof password !== "string" ) throw new TypeError(`La password no es valida`)
+        if ( !password.trim().length ) throw new Error(`La password no es valida`)
+        if ( password.length < 3 ) throw new Error(`La password no es valida`)
     },
     
     // Validación email via Regex
