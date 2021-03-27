@@ -204,6 +204,8 @@ Html, Css, Javascript, Node.js, Npm, Express, Mongoose, Mongo, React.
 
 - Reserva la hora a la que quieres jugar entre las disponibles. 
 
+- uuid Reservas
+
 - Registro mediante redes sociales (passport npm)
 
 - Añadir metodo de pago
