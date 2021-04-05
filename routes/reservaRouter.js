@@ -3,9 +3,10 @@ const express = require(`express`);
 const reservaRouter = express.Router();
 const Reserva = require("../models/reserva.js");
 const {comprobarToken} = require("../controllers/authToken");
+const {validationId, validationReserva} = require("../controllers/validation.js");
 
 // GET - Publica - Consulta de reservas
-reservaRouter.get("/reservas", comprobarToken, (req, res) =>{
+reservaRouter.get("/reservas", comprobarToken,(req, res) =>{
     try{
     Reserva.find({}, (err, reservas) => {
         if(err) return res.status(401).send(`No es fue posible mostrarte todas las reservas`)
@@ -24,6 +25,8 @@ reservaRouter.get("/reservas", comprobarToken, (req, res) =>{
 reservaRouter.get("/reserva/:id", comprobarToken, (req,res)=>{
     try{
         const {params: {id}} = req
+        validationId(id)
+
         Reserva.findById(id)
         .populate("idUsuario","nombre")
         .populate("idPista",["nombre","estado"])
@@ -46,8 +49,7 @@ reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
         const idUsuario =  req.usuario.sub;
         const idPista =  req.body.idPista;
 
-        if(!idUsuario){ return res.status(403).send(`Error, no se encontro usuario asociado a la reserva`)}
-        if(!idPista){ return res.status(403).send(`Error, no se encontro pista asociada a la reserva`)}
+        validationReserva(idUsuario, idPista)
 
         const reserva =  new Reserva({
             idUsuario:idUsuario,
@@ -67,8 +69,8 @@ reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
 // GET - Privada - Historial de reservas realizadas por un usuario
 reservaRouter.get("/reservas/usuario", comprobarToken, (req, res)=>{
     try{
-        const idUsuario = req.usuario.sub
-        Reserva.find({idUsuario})
+        const id = req.usuario.sub
+        Reserva.find({idUsuario : id})
         .populate("idUsuario","nombre")
         .populate("idPista",["nombre","ubicacion"])
         .exec((error, reservas)=>{
@@ -88,6 +90,9 @@ reservaRouter.get("/reservas/usuario", comprobarToken, (req, res)=>{
 reservaRouter.get("/reservas/pista/:id", comprobarToken, (req, res)=>{
     try{
         const idUsuario = req.usuario.sub
+        const { params: { id } } = req
+        validationId(id)
+
         Reserva.find({idUsuario})
         .populate("idUsuario","nombre")
         .populate("idPista",["nombre","ubicacion"])
@@ -107,6 +112,7 @@ reservaRouter.get("/reservas/pista/:id", comprobarToken, (req, res)=>{
 // DELETE - Privada - Borrar reserva realizada
 reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{
     const { params: { id } } = req
+    validationId(id)
 
     Reserva.findById(id, (err, reserva) =>{
         if(err) return res.status(400).send({message:'No se pudo borrar la reserva'})

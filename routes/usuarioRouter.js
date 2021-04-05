@@ -3,11 +3,11 @@ const express = require(`express`);
 const usuarioRouter = express.Router();
 const Usuario = require("../models/usuario.js");
 const bcrypt = require("bcrypt");
-const {validationId, validationEmail, validationPassword, validationTelefono} = require("../controllers/validation");
+const {validationRegister, validationLogin} = require("../controllers/validation");
 const {crearToken, comprobarToken} = require(`../controllers/authToken`);
 
 // GET - Privada - Consulta de usuarios
-usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
+usuarioRouter.get("/usuarios", (req, res) => {
     try{
         Usuario.find({}, (error, usuarios) => {
             if(error) return res.status(400).send(`No es posible mostrarte todos los usuarios`)
@@ -25,8 +25,8 @@ usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
 // GET - Privada - Consulta de usuario individual
 usuarioRouter.get("/usuario", comprobarToken, (req, res) => {
     try{
-        const idUsuario = req.usuario.sub
-        Usuario.findById((idUsuario), (error, usuario) => {
+        const id = req.usuario.sub
+        Usuario.findById((id), (error, usuario) => {
             if(error) res.status(400).send(`No se pudo mostrar el usuario`)
             else { res.status(200).send({
                 message : `Información sobre ${usuario.nombre}`,
@@ -41,28 +41,20 @@ usuarioRouter.get("/usuario", comprobarToken, (req, res) => {
 
 // POST - Publica - Registro de nuevos usuarios
 usuarioRouter.post("/registro", async (req,res) => {
- 
     try{
         const nombre = await req.body.nombre
         const email = await req.body.email
         const password = await req.body.password
         const telefono = await req.body.telefono
-        
-        if(!nombre) return res.status(400).send(`Es necesario un nombre de usuario`)
-        if(!email) return res.status(400).send(`Es necesario un email`)
-        if(!password) return res.status(400).send(`Es necesario un password`)
-        if(!telefono) return res.status(400).send(`Es necesario un telefono de contacto`)
 
-        validationEmail(email)
-        validationPassword(password)
-        validationTelefono(telefono)
+        validationRegister(nombre, email, password, telefono)
         
         const matchNombre = await Usuario.findOne({nombre})
-        if(matchNombre){ return res.status(409).send(`El nombre: ${nombre} introducido ya existe`)}
+        if(matchNombre){ return res.status(400).send(`El nombre: ${nombre} introducido ya existe`)}
         const matchEmail = await Usuario.findOne({email})
-        if(matchEmail){ return res.status(409).send(`El Email: ${email} introducido ya existe`)}
+        if(matchEmail){ return res.status(400).send(`El Email: ${email} introducido ya existe`)}
         const matchTelefono = await Usuario.findOne({telefono})
-        if(matchTelefono){ return res.status(409).send(`El telefono: ${telefono} introducido ya existe`)}
+        if(matchTelefono){ return res.status(400).send(`El telefono: ${telefono} introducido ya existe`)}
         
         // Hash password
         const salt = await bcrypt.genSalt(12);
@@ -84,7 +76,7 @@ usuarioRouter.post("/registro", async (req,res) => {
         })
     }
     catch{   
-        res.status(400).send({message: `Error al crear el usuario`})
+        res.status(400).send({message: `Error al crear al registrarte, compruebe los datos del registro`})
     }
 })
 
@@ -93,9 +85,7 @@ usuarioRouter.post("/login", async (req, res)=>{
     try {
         const email = await req.body.email
         const password = await req.body.password
-
-        validationEmail(email)
-        validationPassword(password)
+        validationLogin(email, password)
 
         const usuario = await Usuario.findOne({email: req.body.email})
         if (!usuario) return res.status(401).send("El usuario no existe")            
@@ -114,7 +104,7 @@ usuarioRouter.post("/login", async (req, res)=>{
 })
 
 // PUT - Privada - Modificación de datos del usuario
-usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
+usuarioRouter.put("/usuario",  (req,res) =>{
     const idUsuario = req.usuario.sub
     let bodyActualizado = req.body;
 
@@ -126,9 +116,9 @@ usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
 })
 
 // DELETE - Privada - Borrar cuenta
-usuarioRouter.delete("/usuario", comprobarToken, (req,res) => {
-    const borrarCuenta = req.usuario.sub
-    Usuario.findByIdAndDelete(borrarCuenta, (err, cuentaEliminada) =>{
+usuarioRouter.delete("/usuario/:id",  (req,res) => {
+    const { params: {id}} = req
+    Usuario.findByIdAndDelete(id, (err, cuentaEliminada) =>{
         if(err) return res.status(400).send(`Tu cuenta no pudo borrarse en estos momentos, pruebe mas tarde`)
         if(cuentaEliminada) return res.send("Usuario borrado exitosamente")
     })

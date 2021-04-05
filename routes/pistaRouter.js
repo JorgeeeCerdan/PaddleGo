@@ -2,7 +2,8 @@
 const express = require(`express`);
 const pistaRouter = express.Router();
 const pista = require("../models/pista.js");
-const {comprobarToken} = require("../controllers/authToken")
+const {comprobarToken} = require("../controllers/authToken");
+const { validationId, validationPista } = require("../controllers/validation.js");
 
 // GET - Privada - Consulta de pistas
 pistaRouter.get("/pistas", comprobarToken, (req,res)=>{
@@ -22,8 +23,11 @@ pistaRouter.get("/pistas", comprobarToken, (req,res)=>{
 
 // GET - Privada - Consulta individual de pista
 pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
+
     try{
-        const {params: {id}} = req
+        const {params: { id }} = req
+        validationId(id)
+
         pista.findById((id), (err, pista) => {
             if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
             else {res.status(200).send({
@@ -46,11 +50,7 @@ pistaRouter.post("/pista", comprobarToken, (req,res) =>{
         const ubicacion = req.body.ubicacion;
         const capacidad = req.body.capacidad;
 
-        if(!nombre){ return res.status(403).send(`Error, se requiere nombre`)}
-        if(!estado){ return res.status(403).send(`Error, se requiere estado de la pista`)}
-        if(!tipo){ return res.status(403).send(`Error, se necesita expecificar que tipo de pista es`)}
-        if(!ubicacion){ return res.status(403).send(`Error, se necesita decir si la pista es outdoor o indoor`)}
-        if(!capacidad){ return res.status(403).send(`Error, se necesita expecificar la capacidad de la pista`)}
+        validationPista(nombre, estado, tipo, ubicacion, capacidad)
 
         const pista = new Pista({
             nombre,
@@ -72,12 +72,12 @@ pistaRouter.post("/pista", comprobarToken, (req,res) =>{
 
 })
 
-
 // PUT - Privada - Modificación de caracteristicas de una pista
 pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
     try{
         const {params:{id}} = req;
         const pistaModificacion = req.body;
+        validationId(id)
         
         pista.findByIdAndUpdate(id, pistaModificacion, (err, pistaActualizada) =>{
             if(err) res.status(400).send(`La pista no ha podido actualizarse: ${err}`)
@@ -96,6 +96,7 @@ pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
 pistaRouter.delete("/pista/:id", comprobarToken, (req,res)=>{
     try{
         const { params: { id } } = req
+        validationId(id)
 
         pista.findByIdAndDelete(id, (error) =>{
             if(error) return res.status(400).send({message:'No se pudo borrar la reserva'})

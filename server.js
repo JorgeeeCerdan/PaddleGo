@@ -3,6 +3,7 @@ require(`dotenv`).config()
 const { env: {PORT, MONGO_URL}} = process
 const express = require(`express`)
 const server = express()
+const cors = require(`cors`)
 const morgan = require(`morgan`)
 
 // Importación de rutas
@@ -13,19 +14,23 @@ const reservaRouter = require("./routes/reservaRouter")
 // Conexión con Mongo
 const mongoose = require(`mongoose`)
 mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifiedTopology:true})
+    // .then(() => {
+    //     console.log("servidor conectado")
+    // })
 
     // Error en la conexión con Mongo
     .catch((error) => {
         console.log(error)
         if(mongoose.connection.readyState === 1)
-            // Descontecamos mongoose
+        // Descontecamos mongoose
             return mongoose.disconnect()
             .catch(console.error)
-            // Descontecamos node
+        // Descontecamos node
             .then(() => process.exit())
     })
 
     // Middlewares
+    server.use(cors())
     server.use(morgan(`dev`)) 
     server.use(express.json())
     server.use(express.urlencoded())
@@ -34,7 +39,7 @@ mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifie
     server.use(reservaRouter)
     
     // Bienvenida
-    server.get("/", (req, res) => res.status(200).send({ message: "Bienvenido, servidor encendido"}))
+    server.get("/", (req, res) => res.status(200).send({ message: `Bienvenido, servidor encendido en el puerto ${PORT}`}))
     // Página consultada no existente
     server.use(`*`, (req, res) => res.status(404).send({message:`Error 404. La página no existe`}))
     // Poner en escucha al server
