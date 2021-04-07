@@ -30,6 +30,9 @@ pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
 
         pista.findById((id), (err, pista) => {
             if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
+            if(pista == null) { res.status(400).send({
+                message : "No existe la pista seleccinada"
+            })}
             else {res.status(200).send({
                 message : `Consulta individual de pista`,
                 pista
@@ -97,12 +100,14 @@ pistaRouter.delete("/pista/:id", comprobarToken, (req,res)=>{
     try{
         const { params: { id } } = req
         validationId(id)
+        console.log(id)
 
-        pista.findByIdAndDelete(id, (error) =>{
+        pista.findById(id, (error, unaPista) =>{
+            console.log(unaPista)
             if(error) return res.status(400).send({message:'No se pudo borrar la reserva'})
+            if(unaPista) res.status(200).send({ message : `La pista fue borrada existosamente.`})
             
-            pista.deleteOne(pista)
-            .then( res.status(200).send({ message : `La reserva fue borrada existosamente.`}))
+            unaPista.deleteOne()
         })
     }
     catch{

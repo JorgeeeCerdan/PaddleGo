@@ -6,13 +6,16 @@ const InicioApp = () => {
     return(
         <Fragment>
                 <div>
-                    <h1><Link to="/pistas">Reserva pista</Link></h1>
+                    <h1><Link to={"/inicio"}>Inicio</Link></h1>
                 </div>
                 <div>
-                    <h1><Link to="/reservas/usuario">Historial de reservas</Link></h1>
+                    <h1><Link to={"/pistas"}>Reserva pista</Link></h1>
                 </div>
                 <div>
-                    <h1><Link to="/usuario">Perfil</Link></h1>
+                    <h1><Link to={"/reservas/usuario"}>Historial de reservas</Link></h1>
+                </div>
+                <div>
+                    <h1><Link to={"/usuario"}>Perfil</Link></h1>
                 </div>
         </Fragment>
     )

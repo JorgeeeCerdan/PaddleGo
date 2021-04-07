@@ -13,7 +13,7 @@ const authToken = {
             iat: Date.now() / 1000
             // exp:
         }
-        return jwt.sign(payload, SECRET, {expiresIn: "2h"})
+        return jwt.sign(payload, SECRET, {expiresIn: "24h"})
     },
 
     // Comprobación de Token

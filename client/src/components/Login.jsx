@@ -3,6 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 import { ACCESS_TOKEN_NAME } from '../constants/constants.jsx'
 import setAuthToken from '../utility/AuthToken.jsx';
+import NavbarHome from './NavbarHome.jsx';
 
 const Login = () => {
   
@@ -22,9 +23,8 @@ const Login = () => {
             setAuthToken(response.data.token)
             localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token)
             setTimeout(() => {
-                history.push("/Bienvenido")
+                history.push("/inicio")
             }, 2500);
-
         })
         .catch( error => {
             setLoginError(error.response.data)
@@ -36,9 +36,7 @@ const Login = () => {
 
     return(
         <div>
-            <button>
-                <Link to="/">Boton/icono volver atras</Link>
-            </button>
+            <NavbarHome/>
             <h2>¡Bienvenido de nuevo!</h2>
             <p>Prepara tu pala de padel que las pistas están preparadas</p>
             

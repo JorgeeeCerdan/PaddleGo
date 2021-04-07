@@ -4,11 +4,14 @@ import setAuthToken from "../utility/AuthToken.jsx"
 import {ACCESS_TOKEN_NAME} from "../constants/constants.jsx"
 import { Link } from "react-router-dom";
 import NavbarApp from './NavbarApp.jsx'
+import PistaCrear from "./PistaCrear.jsx";
+
 
 const Pistas = () => {
 
     const [pistas, setPistas] = useState([])
 
+    // GET DE TODAS LAS PISTAS
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
@@ -19,18 +22,21 @@ const Pistas = () => {
             console.log(response.data.pistas)
             setPistas(response.data.pistas)
         })
-        .catch( error => error.response.data.pistas)
+        .catch( error => {
+            console.log( error )
+        })
     },[])
-
 
     return(
         <div>
             <NavbarApp />
-            <button><Link to="/Bienvenido">Boton/icono volver atras</Link></button>
-            <h2>Pistas 🏟️</h2>
+            <h2>Crear una pista nueva</h2>
+            <PistaCrear/>
+            <h2>Pistas para reservar 🏟️</h2>
+            <div>
             {   
                 pistas.map( pista => (
-                    <Link  props={pista._id} key={pista._id} to={`/pista/${pista._id}`}>
+                    <Link to={`/pista/${pista._id}`} key={pista._id}>
                         <div>
                             <div>
                                 <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt="Stadium"/>
@@ -45,6 +51,7 @@ const Pistas = () => {
                     </Link>
                 ))
             }
+            </div>
         </div>
     )
 }

@@ -7,7 +7,7 @@ const {validationRegister, validationLogin} = require("../controllers/validation
 const {crearToken, comprobarToken} = require(`../controllers/authToken`);
 
 // GET - Privada - Consulta de usuarios
-usuarioRouter.get("/usuarios", (req, res) => {
+usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
     try{
         Usuario.find({}, (error, usuarios) => {
             if(error) return res.status(400).send(`No es posible mostrarte todos los usuarios`)
@@ -104,7 +104,7 @@ usuarioRouter.post("/login", async (req, res)=>{
 })
 
 // PUT - Privada - Modificación de datos del usuario
-usuarioRouter.put("/usuario",  (req,res) =>{
+usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
     const idUsuario = req.usuario.sub
     let bodyActualizado = req.body;
 
@@ -116,8 +116,8 @@ usuarioRouter.put("/usuario",  (req,res) =>{
 })
 
 // DELETE - Privada - Borrar cuenta
-usuarioRouter.delete("/usuario/:id",  (req,res) => {
-    const { params: {id}} = req
+usuarioRouter.delete("/usuario", comprobarToken, (req,res) => {
+    const id = req.usuario.sub
     Usuario.findByIdAndDelete(id, (err, cuentaEliminada) =>{
         if(err) return res.status(400).send(`Tu cuenta no pudo borrarse en estos momentos, pruebe mas tarde`)
         if(cuentaEliminada) return res.send("Usuario borrado exitosamente")

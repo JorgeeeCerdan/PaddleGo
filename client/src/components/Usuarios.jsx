@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import {Link} from 'react-router-dom'
 import axios from 'axios'
 import NavbarApp from './NavbarApp.jsx'
 
@@ -22,7 +21,6 @@ const Usuarios = () =>{
         <Fragment>
         <NavbarApp/>
         <div>
-            <button><Link to="/Bienvenido">Boton/icono volver atras</Link></button>
             <h2>Perfil de usuario 👤</h2>
             <div>
                 {

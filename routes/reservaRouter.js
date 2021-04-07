@@ -6,7 +6,7 @@ const {comprobarToken} = require("../controllers/authToken");
 const {validationId, validationReserva} = require("../controllers/validation.js");
 
 // GET - Publica - Consulta de reservas
-reservaRouter.get("/reservas", comprobarToken,(req, res) =>{
+reservaRouter.get("/reservas", (req, res) =>{
     try{
     Reserva.find({}, (err, reservas) => {
         if(err) return res.status(401).send(`No es fue posible mostrarte todas las reservas`)
@@ -113,12 +113,12 @@ reservaRouter.get("/reservas/pista/:id", comprobarToken, (req, res)=>{
 reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{
     const { params: { id } } = req
     validationId(id)
-
+    console.log(id)
     Reserva.findById(id, (err, reserva) =>{
         if(err) return res.status(400).send({message:'No se pudo borrar la reserva'})
         if(reserva.idUsuario != req.usuario.sub) return res.status(401).send(`Solamente quien hizo la reserva puede borrarla`)
 
-        reserva.deleteOne(reserva)
+        reserva.deleteOne()
         .then((reserva) => res.status(200).send({ message : `La reserva fue borrada existosamente.`, reserva}))
         .catch((error) => res.status(400).send({ message : `No se pudo borrar la reserva`, error}))
     })
