@@ -108,10 +108,15 @@ usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
     const idUsuario = req.usuario.sub
     let bodyActualizado = req.body;
 
-    Usuario.findByIdAndUpdate(idUsuario, bodyActualizado, (err, usuarioActualizado) =>{
+    Usuario.findByIdAndUpdate(idUsuario, bodyActualizado, {new: true}, (err, usuarioActualizado) =>{
         if(err) return res.status(400).send(`La cuenta no ha podido actualizarse`)
-        if(usuarioActualizado) return res.status(201).send(`La cuenta se ha actualizado`)
-        if(usuarioActualizado.id !== idUsuario) return res.status(401).send(`No puedes actualizar los datos`)
+        if(usuarioActualizado.id !== idUsuario) return res.status(401).send({
+            message : `No puedes actualizar los datos`
+        })
+        if(usuarioActualizado) return res.status(201).send({
+            message:`La cuenta se ha actualizado`,
+            bodyActualizado
+        })
     })
 })
 

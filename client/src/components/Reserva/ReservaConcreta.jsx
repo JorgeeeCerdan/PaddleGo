@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import {ACCESS_TOKEN_NAME} from "../constants/constants.jsx"
+import { ACCESS_TOKEN_NAME } from '../../constants/constants';
+import moment from 'moment'
+import "moment/locale/es"
 
 const ReservaConcreta = (props) => {
 
@@ -32,7 +34,7 @@ const ReservaConcreta = (props) => {
     return(
         <div key={props.id}>
            <h2>{props.match.params.id}</h2>
-           <h2>{reservaUnica.fecha}</h2>
+           <h2>{moment(reservaUnica.fecha).format('LLLL')}</h2>
            <h2>{reservaUnica.idUsuario}</h2>
            <h2>{reservaUnica.idPista}</h2>
         </div>

@@ -10,21 +10,27 @@ import Registro from "./components/Registro.jsx";
 
 // APP PADDLEGO
 import InicioApp from "./components/InicioApp";
-import Pistas from "./components/Pistas.jsx";
-import PistaCrear from "./components/PistaCrear";
-import PistaReserva from "./components/PistaReserva.jsx";
-import Reservas from "./components/Reservas.jsx";
-import ReservasUsuario from "./components/ReservasUsuario";
-import Usuarios from "./components/Usuarios.jsx";
-import PerfilUsuario from "./components/PerfilUsuario.jsx";
-import ReservaConcreta from './components/ReservaConcreta.jsx'
+
+// APP PISTAS
+import Pistas from "./components/Pista/Pistas.jsx";
+import PistaCrear from "./components/Pista/PistaCrear.jsx";
+import PistaReserva from "./components/Pista/PistaReserva.jsx";
+
+// APP RESERVAS
+import Reservas from "./components/Reserva/Reservas.jsx";
+import ReservasUsuario from "./components/Reserva/ReservasUsuario";
+import ReservaConcreta from './components/Reserva/ReservaConcreta.jsx'
+
+// APP USUARIO
+import Usuarios from "./components/Usuario/Usuarios.jsx";
+import PerfilUsuario from "./components/Usuario/PerfilUsuario.jsx";
 
 function App () {
   
 
   return (    
     <Router>
-        <Switch>
+      <Switch>
         <PrivateRoute path="/reservas/usuario/" component={ReservasUsuario} />
         <PrivateRoute path="/reservas/:id" component={ReservaConcreta} />
         <PrivateRoute path="/reservas" component={Reservas} />

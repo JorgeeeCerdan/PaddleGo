@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import NavbarApp from './NavbarApp.jsx'
-import { ACCESS_TOKEN_NAME } from '../constants/constants.jsx'
+import NavbarApp from '../NavbarApp.jsx'
+import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx'
 import { useHistory } from 'react-router'
+import moment from 'moment'
+import 'moment/locale/es'
 
 const ReservasUsuario = () => {
 
@@ -14,7 +16,7 @@ const ReservasUsuario = () => {
 
         axios.get(`http://localhost:5000/reservas/usuario`, config)
         .then( response => {
-            // if (response.data.reservas.length < 1) console.log("No tienes ninguna pista reservada")
+            if (response.data.reservas.length < 1) console.log("No tienes ninguna pista reservada")
             console.log (response.data.reservas)
             setReservasUsuario(response.data.reservas)
         })
@@ -52,13 +54,13 @@ const ReservasUsuario = () => {
             <NavbarApp/>
             </div>
             <div>
-                <h1>Reservas realizadas</h1>  
+                <h1>Reservas realizadas por ti.</h1>  
             </div>
             {
                 reservasUsuario.map( reserva => (
                     <div key={reserva._id}>
                         <div>
-                            <h2>{reserva.fecha}</h2>
+                            <h2>{moment(reserva.fecha).format('LLL')}</h2>
                             <h2>{reserva.idUsuario.nombre}</h2>
                             <h2>{reserva.idPista.nombre}</h2>
                         </div>

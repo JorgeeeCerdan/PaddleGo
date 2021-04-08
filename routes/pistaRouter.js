@@ -82,7 +82,7 @@ pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
         const pistaModificacion = req.body;
         validationId(id)
         
-        pista.findByIdAndUpdate(id, pistaModificacion, (err, pistaActualizada) =>{
+        pista.findByIdAndUpdate(id, pistaModificacion, {new: true}, (err, pistaActualizada) =>{
             if(err) res.status(400).send(`La pista no ha podido actualizarse: ${err}`)
             else{ res.status(201).send({
                 message : `La pista ha sido modificada`,

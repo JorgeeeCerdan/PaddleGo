@@ -1,8 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { ACCESS_TOKEN_NAME } from '../constants/constants'
+import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx';
 import { useHistory } from 'react-router';
-
 
 const PistaCrear = () => {
 
@@ -31,9 +30,10 @@ const PistaCrear = () => {
         })
     }
         
-    const changeInputs = (event) => {
-        setCrearPista({ ...crearPista, [event.target.name]: event.target.value})
-    }
+    const changeInputs = (event) => setCrearPista({
+        ...crearPista,
+        [event.target.name]: event.target.value
+    })
 
     return(
         <div>
@@ -57,6 +57,5 @@ const PistaCrear = () => {
         </div>
     )
 }
-
 
 export default PistaCrear;

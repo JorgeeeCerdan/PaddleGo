@@ -1,34 +1,32 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME } from '../constants/constants.jsx';
+import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx';
 import axios from 'axios'
-import NavbarApp from './NavbarApp.jsx'
+import NavbarApp from '../NavbarApp.jsx'
+import PerfilEditar from './PerfilEditar.jsx';
 
 const PerfilUsuario = () =>{
-    
     const history = useHistory()
     const [perfilUsuario, setPerfilUsuario] = useState([])
-
+    
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization : `Bearer ${token}` } }
-
+        
         axios.get(`http://localhost:5000/usuario`, config)
         .then(response => {
             setPerfilCorrecto(response.data.message)
-            setTimeout(() => {
-                setPerfilUsuario(response.data.usuario)
-            }, 1500);
+            setPerfilUsuario(response.data.usuario)
         })
         .catch(error => {
             setPerfilError(error.response.data.usuario)
         })
     },[])
-
+    
     const handleDelete = () => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { header: { Authorization: `Bearer ${token}`}}
-
+        
         axios.delete(`http://localhost:5000/usuario`, config)
         .then(response => {
             console.log(response.data)
@@ -39,7 +37,7 @@ const PerfilUsuario = () =>{
             console.log(error.response.data.usuario)
         })
     }
-
+    
     const handleLogout = () => {
         localStorage.removeItem(ACCESS_TOKEN_NAME)
         setTimeout(() => {
@@ -47,30 +45,9 @@ const PerfilUsuario = () =>{
         }, 2500);
     }
     
-    // PUT MODIFICAR USUARIO A REALIZAR
-    const idModificarUsuario = {
-        nombre : "",
-        email : "",
-        password : "",
-        telefono : "",
-    }
-    const handleChangeValue = () => {
-
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers : { Authorization : `Bearer ${token}` }}
-
-        axios.put("", idModificarUsuario, config)
-        .then( response => {
-            console.log( response.data.message )
-        })
-        .catch( error => {
-            console.log(error.data.message)
-        })
-    }
-
     const [perfilError, setPerfilError] = useState("")
     const [perfilCorrecto, setPerfilCorrecto] = useState("")
-
+    
     return(
         <Fragment>
             <NavbarApp/>
@@ -80,7 +57,6 @@ const PerfilUsuario = () =>{
             <div>
                 <h2>Nombre completo</h2>
                 <p>{perfilUsuario.nombre}</p>
-                <button type="submit" onClick={handleChangeValue}>Modificar Nombre</button>
             </div>
 
             <div>
@@ -97,6 +73,8 @@ const PerfilUsuario = () =>{
                 <h2>Telefono</h2>
                 <p>{perfilUsuario.telefono}</p>
             </div>
+
+            <PerfilEditar datosUsuario={perfilUsuario} setPerfilUsuario={setPerfilUsuario}/>
 
             <button tpye="submit" onClick={handleLogout}>Cerrar sesión</button>
 

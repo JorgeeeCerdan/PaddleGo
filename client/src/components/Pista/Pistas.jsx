@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import setAuthToken from "../utility/AuthToken.jsx"
-import {ACCESS_TOKEN_NAME} from "../constants/constants.jsx"
+import setAuthToken from "../../utility/AuthToken.jsx"
+import {ACCESS_TOKEN_NAME} from "../../constants/constants.jsx"
 import { Link } from "react-router-dom";
-import NavbarApp from './NavbarApp.jsx'
-import PistaCrear from "./PistaCrear.jsx";
+import NavbarApp from '../NavbarApp.jsx'
+import PistaCrear from "./PistaCrear";
 
 
 const Pistas = () => {
-
+    
     const [pistas, setPistas] = useState([])
 
     // GET DE TODAS LAS PISTAS

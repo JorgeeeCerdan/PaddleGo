@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios'
-import NavbarApp from './NavbarApp.jsx'
+import NavbarApp from '../NavbarApp.jsx'
 
 const Usuarios = () =>{
 

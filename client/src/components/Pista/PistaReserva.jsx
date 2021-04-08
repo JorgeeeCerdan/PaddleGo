@@ -1,8 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
+import { ACCESS_TOKEN_NAME } from '../../constants/constants';
 import axios from 'axios'
-import { ACCESS_TOKEN_NAME } from '../constants/constants.jsx'
-import NavbarApp from './NavbarApp.jsx'
+import NavbarApp from '../NavbarApp.jsx'
+import PistaEditar from '../Pista/PistaEditar.jsx'
+
 
 const PistaReserva = (props) => {
 
@@ -15,6 +17,10 @@ const PistaReserva = (props) => {
 
     // MOSTRAR DATOS DE PISTA A RESERVAR
     useEffect(() => {
+        getPista()
+    }, [props.match.params.id])
+
+    const getPista = () => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
         
@@ -27,8 +33,7 @@ const PistaReserva = (props) => {
             setPistaAReservar(response.data.pista)
         })
         .catch( error => console.log( error.response.data.message) )
-
-    }, [props.match.params.id])
+    }
 
     const history = useHistory()
 
@@ -103,21 +108,23 @@ const PistaReserva = (props) => {
                     <p><b>Ubicacion:</b> {PistaAReservar.ubicacion}</p>
                     <p><b>Capacidad:</b> {PistaAReservar.capacidad} Personas</p>
                 </div>
-
                 <div>
-                    {/* <h3>¿A que hora quieres jugar?</h3>
-                    <div>09:00</div>
-                    <div>10:00</div>
-                    <div>11:00</div>
-                    <div>12:00</div>
-                    <div>15:00</div>
-                    <div>16:00</div> */}
+                    {
+                        /* <h3>¿A que hora quieres jugar?</h3>
+                        <div>09:00</div>
+                        <div>10:00</div>
+                        <div>11:00</div>
+                        <div>12:00</div>
+                        <div>15:00</div>
+                        <div>16:00</div> */
+                    }
                 </div>
                 <div>
                     <button type="submit" value={props.match.params.id} onClick={reservar}>Realizar reserva</button>
                     <button type="submit" value={props.match.params.id} onClick={borrarPista}>Borrar pista</button>
                     <button type="submit" value={props.match.params.id} onClick={editarPista}>Editar pista</button>    
                 </div>
+                <PistaEditar datosPista={PistaAReservar} setPistaAReservar={setPistaAReservar}/>
             </div>
         </Fragment>
     )
