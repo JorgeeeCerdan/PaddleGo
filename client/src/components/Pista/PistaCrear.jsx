@@ -13,6 +13,9 @@ const PistaCrear = () => {
         capacidad : ""
     })
 
+    const [crearPistCorrecto, setCrearPistCorrecto] = useState("")
+    const [crearPistaError, setCrearPistaError] = useState("")
+
     const history = useHistory()
     const handleCrearPista = (e) => {
         e.preventDefault();
@@ -21,12 +24,14 @@ const PistaCrear = () => {
     
         axios.post("http://localhost:5000/pista", {...crearPista}, config)
         .then( response => {
-            console.log(response.data)
-            setCrearPista( response.data)
-            history.push("/pistas")
+            setCrearPistCorrecto(response.data.message)
+            setCrearPista(response.data.pista)
+            setTimeout(() => {
+                history.go("/pistas")
+            }, 100);
         })
         .catch( error => { 
-            console.log( error.response.data.message )
+            setCrearPistaError(error.response.data.message)
         })
     }
         
@@ -34,6 +39,17 @@ const PistaCrear = () => {
         ...crearPista,
         [event.target.name]: event.target.value
     })
+
+    const resetFormCrearPista = (event) => {
+        event.preventDefault()
+        setCrearPista({
+            nombre : "",
+            estado : "",
+            tipo : "",
+            ubicacion : "",
+            capacidad : ""
+        })
+    } 
 
     return(
         <div>
@@ -54,6 +70,13 @@ const PistaCrear = () => {
             </form>
 
             <button type="submit" onClick={handleCrearPista}> Crear pista</button>
+            <button type="reset" onClick={resetFormCrearPista}> Resetear formulario</button>
+    
+            <div>
+                {crearPistCorrecto && <div><p>{crearPistCorrecto}</p></div>}
+                {crearPistaError && <div><p>{crearPistaError}</p></div>}
+            </div>
+
         </div>
     )
 }

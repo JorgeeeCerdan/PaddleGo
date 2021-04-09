@@ -74,7 +74,7 @@ reservaRouter.get("/reservas/usuario", comprobarToken, (req, res)=>{
         .populate("idUsuario","nombre")
         .populate("idPista",["nombre","ubicacion"])
         .exec((error, reservas)=>{
-            if(error) res.status(400).send(err.message)
+            if(error) res.status(400).send({message:"ZIZUUUUU"})
             else{res.status(200).send({
                 message : `Historial de reservas realizadas`,
                 reservas

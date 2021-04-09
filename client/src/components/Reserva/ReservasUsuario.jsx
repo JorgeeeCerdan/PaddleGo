@@ -10,44 +10,48 @@ const ReservasUsuario = () => {
 
     const [reservasUsuario, setReservasUsuario] = useState([])
 
+    const [reservasUsuarioCorrecto, setReservasUsuarioCorrecto] = useState("")
+    const [reservasUsuarioError, setReservasUsuarioError] = useState("")
+    const [reservasUsuarioDeleteCorrecto, setReservasUsuarioDeleteCorrecto] = useState("")
+    const [reservasUsuarioDeleteError, setReservasUsuarioDeleteError] = useState("")
+
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers : { Authorization : `Bearer ${token}` }}
 
         axios.get(`http://localhost:5000/reservas/usuario`, config)
         .then( response => {
-            if (response.data.reservas.length < 1) console.log("No tienes ninguna pista reservada")
-            console.log (response.data.reservas)
-            setReservasUsuario(response.data.reservas)
+            if (response.data.reservas.length <= 0) {
+                setReservasUsuarioError("No tienes ninguna pista reservada")
+            }else{
+                setReservasUsuario(response.data.reservas)
+                setReservasUsuarioCorrecto(response.data.message)
+            }
         })
         .catch( error => {
-            console.log(error)
+            setReservasUsuarioError(error.response.data.message)
         })
-    },[])
+    },[])    
 
     const history = useHistory()
     const handleBorrarReserva = (event) => {
         event.preventDefault();
-        
-        const idBorrarReserva = {
-            id : event.target.value
-        }
-
+        const idBorrarReserva = {id : event.target.value}
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
-
+        
         axios.delete(`http://localhost:5000/reserva/${idBorrarReserva.id}`, config)
-        .then( response => {
-            console.log(response.data.message)
+        .then(response => {
+            setReservasUsuarioDeleteCorrecto(response.data.message)
             setTimeout(() => {
                 history.go("/reservas/usuario")
             }, 1000);
         })
-        .catch( error => {
-            console.log(error.response.data.message)
+        .catch(error => {
+            setReservasUsuarioDeleteError(error.response.data.message)
         })
     }
-
+    
     return(
         <div>
             <div>
@@ -56,6 +60,15 @@ const ReservasUsuario = () => {
             <div>
                 <h1>Reservas realizadas por ti.</h1>  
             </div>
+            <div>
+                {reservasUsuarioCorrecto && <div><p>{reservasUsuarioCorrecto}</p></div>}
+                {reservasUsuarioError && <div><p>{reservasUsuarioError}</p></div>}
+            </div>
+            <div>
+                {reservasUsuarioDeleteCorrecto && <div><p>{reservasUsuarioDeleteCorrecto}</p></div>}
+                {reservasUsuarioDeleteError && <div><p>{reservasUsuarioDeleteError}</p></div>}
+            </div>
+
             {
                 reservasUsuario.map( reserva => (
                     <div key={reserva._id}>

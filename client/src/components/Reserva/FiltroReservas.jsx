@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import moment from "moment"
 import 'moment/locale/es'
 
@@ -7,17 +8,32 @@ const FiltroReservas = ({reservas}) => {
     const todasReservas = reservas
     const [BuscarReserva, setBuscarReserva] = useState([])
     const [sacarValor, setSacarValor] = useState([...todasReservas])
+    const [filtroCorrecto, setFiltroCorrecto] = useState("")
+    const [filtroError, setFiltroError] = useState("")
+
     
     const inputReserva = (event) => setBuscarReserva(event.target.value)
 
     const filtrarReservas = (event) => {
         event.preventDefault()
         const filtrarReserva = todasReservas.filter(reserva => reserva._id === BuscarReserva)
-        console.log(filtrarReserva)
-        setSacarValor(filtrarReserva)
+        if(filtrarReserva.length === 0){
+            setFiltroError("No existe reservas con este codigo")
+        }else{
+            setFiltroError("")
+            setFiltroCorrecto("Resultado de la busqueda:")
+            setSacarValor(filtrarReserva)
+        }   
     }
 
-    const resetFilter = () => setSacarValor([])
+    const history = useHistory()
+    const resetFilter = () => {
+        setSacarValor([])
+        setBuscarReserva([])
+        setFiltroError("")
+        history.go("/reservas")
+    }
+
 
     return(
         <div>
@@ -25,14 +41,17 @@ const FiltroReservas = ({reservas}) => {
                 <label htmlFor="filtroReservas"></label>
                 <input  type="text" placeholder="Introduce el numero para buscar una reserva" value={BuscarReserva} onChange={inputReserva}/>
                 <button type="submit" onClick={filtrarReservas}>Buscar reserva</button>
-                <button type="submit" onClick={() => resetFilter([])}>Borrar filtro</button>
+                <button type="reset" onClick={resetFilter}>Borrar filtro</button>
+            </div>
+            <div>
+                <h1>{filtroError && <div><p>{filtroError}</p></div>}</h1>
             </div>
             <div> 
                 {
                     sacarValor && sacarValor.map(element => (
                         <div key={element._id}>
                             <hr/>
-                                <h1>Resultado de la busqueda:</h1>
+                                <h1>{filtroCorrecto && <div><p>{filtroCorrecto}</p></div>}</h1>
                             <div>
                                 <img className="pruebaImg" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt=""/>
                             </div>                                

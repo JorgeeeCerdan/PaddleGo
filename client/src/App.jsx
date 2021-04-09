@@ -37,8 +37,8 @@ function App () {
         <PrivateRoute path="/pista/:id" component={PistaReserva} />
         <PrivateRoute path="/pista" component={PistaCrear} />
         <PrivateRoute path="/pistas" component={Pistas} />
-        <PrivateRoute path="/usuario" component={PerfilUsuario} />
         <PrivateRoute path="/usuarios" component={Usuarios} />
+        <PrivateRoute path="/usuario" component={PerfilUsuario} />
         <PrivateRoute path="/inicio" component={InicioApp} />
 
         <Route path="/registro" component={Registro} />

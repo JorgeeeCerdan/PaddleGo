@@ -8,6 +8,8 @@ import NavbarHome from './NavbarHome.jsx';
 const Login = () => {
   
     const [userLogin, setUserLogin] = useState({ email : "", password : "" })
+    const [loginError, setLoginError] = useState("")
+    const [loginCorrecto, setLoginCorrecto] = useState("")
     
     const changeInputs = (event) => {
         setUserLogin({ ...userLogin, [event.target.name]: event.target.value})
@@ -31,8 +33,13 @@ const Login = () => {
         })
     }
 
-    const [loginError, setLoginError] = useState("")
-    const [loginCorrecto, setLoginCorrecto] = useState("")
+    const resetFormLogin = (event) => {
+        event.preventDefault()
+        setUserLogin({
+            email: "",
+            password: ""
+        })
+    }
 
     return(
         <div>
@@ -59,10 +66,13 @@ const Login = () => {
                 onChange={changeInputs}
                 />
 
-                <p>No dude en contactar con nosotros si tiene algún problema técnico</p>
+                <p>No dude en contactar con nosotros si tienes algún problema</p>
                 <button type="submit" onClick={submitLoginForm}>Iniciar sesion</button>
-                { loginError && <div><p>{loginError}</p></div>}
-                { loginCorrecto && <div><p>{loginCorrecto}</p></div>}
+                <button type="reset" onClick={resetFormLogin}>Resetear formulario</button>
+                <div>
+                    {loginError && <div><p>{loginError}</p></div>}
+                    {loginCorrecto && <div><p>{loginCorrecto}</p></div>}
+                </div>
 
                 <p>
                     <Link to="/registro">¿Aún no tienes cuenta? Registrate</Link>

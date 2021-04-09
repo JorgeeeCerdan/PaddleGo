@@ -7,36 +7,46 @@ import "moment/locale/es"
 const ReservaConcreta = (props) => {
 
     console.log(props)
-    
+    console.log("ESTOY AQUI")
+
     const [reservaUnica, setReservaUnica] = useState({
         fecha : "",
         idUsuario: "",
         idPista: ""
     })
-
+    const [reservaConcreataCorrecto, setReservaConcreataCorrecto] = useState("")
+    const [reservaConcretaError, setReservaConcretaError] = useState("")
+    
     useEffect(() => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
         
-        axios.get(`http://localhost:5000/pista/${props.id}` , config)
+        axios.get(`http://localhost:5000/pista/${props.match.params.id}` , config)
         .then( response => {
             if (response.data.reserva == null) {
-                return console.log("La pista seleccionada no existe")
+                return setReservaConcretaError("La pista seleccionada no existe")
             }
-            console.log(response.data)
+            setReservaConcreataCorrecto(response.data.message)
             setReservaUnica(response.data)
+            console.log(response.data)
         })
-        .catch( error => console.log( error.response.data.message) )
+        .catch( error => setReservaConcretaError(error.response.data.message) )
 
-    }, [props.id])
+    }, [props.match.params.id])
 
 
     return(
-        <div key={props.id}>
-           <h2>{props.match.params.id}</h2>
-           <h2>{moment(reservaUnica.fecha).format('LLLL')}</h2>
-           <h2>{reservaUnica.idUsuario}</h2>
-           <h2>{reservaUnica.idPista}</h2>
+        <div>
+            <div>
+                {reservaConcreataCorrecto && <div><p>{reservaConcreataCorrecto}</p></div>}
+                {reservaConcretaError && <div><p>{reservaConcretaError}</p></div>}
+            </div>
+            <div key={props.id}>
+               <h2>{props.match.params.id}</h2>
+               <h2>{moment(reservaUnica.fecha).format('LLLL')}</h2>
+               <h2>{reservaUnica.idUsuario}</h2>
+               <h2>{reservaUnica.idPista}</h2>
+            </div>
         </div>
     )
 }

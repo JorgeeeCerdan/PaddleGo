@@ -8,6 +8,8 @@ import PerfilEditar from './PerfilEditar.jsx';
 const PerfilUsuario = () =>{
     const history = useHistory()
     const [perfilUsuario, setPerfilUsuario] = useState([])
+    const [perfilError, setPerfilError] = useState("")
+    const [perfilCorrecto, setPerfilCorrecto] = useState("")
     
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
@@ -45,14 +47,13 @@ const PerfilUsuario = () =>{
         }, 2500);
     }
     
-    const [perfilError, setPerfilError] = useState("")
-    const [perfilCorrecto, setPerfilCorrecto] = useState("")
-    
     return(
         <Fragment>
             <NavbarApp/>
-            { perfilError && <div><p>{perfilError}</p></div>}
-            { perfilCorrecto && <div><p>{perfilCorrecto}</p></div>}
+            <div>
+                { perfilError && <div><p>{perfilError}</p></div>}
+                { perfilCorrecto && <div><p>{perfilCorrecto}</p></div>}
+            </div>
             <div key={perfilUsuario._id}>
             <div>
                 <h2>Nombre completo</h2>

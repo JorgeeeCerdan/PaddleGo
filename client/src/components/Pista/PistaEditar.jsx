@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx'
 import axios from 'axios'
 
@@ -6,16 +7,24 @@ const PistaEditar = ({datosPista, setPistaAReservar}) => {
 
     const infoPista = datosPista
     const [pistaModificada, setPistaModificada] = useState({})
+    const [pistaModificadaCorrecto, setPistaModificadaCorrecto] = useState("")
+    const [pistaModificadaError, setPistaModificadaError] = useState("")
+    const history = useHistory()
 
     const modificarPista = (event) => {
         event.preventDefault()
-
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
     
         axios.put(`http://localhost:5000/pista/${infoPista._id}`, pistaModificada, config)
-        .then(response => setPistaAReservar(response.data.pistaActualizada))
-        .catch(error => console.log(error.response.data))
+        .then(response => {
+            setPistaModificadaCorrecto(response.data.message)
+            setPistaAReservar(response.data.pistaActualizada)
+            setTimeout(() => {
+                history.go("/pistas")
+            }, 1000);
+        })  
+        .catch(error => setPistaModificadaError(error.response.data.message))
     }
 
     const changeInputs = (event) => setPistaModificada({
@@ -99,6 +108,11 @@ const PistaEditar = ({datosPista, setPistaAReservar}) => {
                     <button type="submit" onClick={modificarPista}>Modificar pista</button>
                     <button type="reset" value="Reset" onClick={resetForm}>Resetear formulario</button>
                 </form>
+
+                <div>
+                    {pistaModificadaCorrecto && <div><p>{pistaModificadaCorrecto}</p></div>}
+                    {pistaModificadaError && <div><p>{pistaModificadaError}</p></div>}
+                </div>
             </div>
     )
 }

@@ -8,19 +8,21 @@ import moment from "moment"
 import 'moment/locale/es'
 
 const Reservas = () =>{
+
     const [reservas, setReservas] = useState([])
+    const [reservasCorrecto, setReservasCorrecto] = useState("")
+    const [reservasError, setReservasError] = useState("")
 
     useEffect(() => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers : { Authorization : `Bearer ${token}` }}
 
         axios.get("http://localhost:5000/reservas", config)
-        .then(res => {
-            console.log(res.data)
-            setReservas(res.data.reservas)
+        .then(response => {
+            setReservasCorrecto(response.data.message)
+            setReservas(response.data.reservas)
         })
-        .catch(error => console.log(error.response.data.reservas))
-        
+        .catch(error => setReservasError(error.response.data.message)) 
     },[])
 
     return( 
@@ -29,6 +31,10 @@ const Reservas = () =>{
             <div>
                 <button><Link to={"/inicio"}>Boton/icono volver atras</Link></button>
                 <h2>Reservas 🎾</h2>
+                <div>
+                    {reservasCorrecto && <div><p>{reservasCorrecto}</p></div>}
+                    {reservasError && <div><p>{reservasError}</p></div>}
+                </div>
                 <div>
                     <FiltroReservas reservas={reservas}/>
                 </div>

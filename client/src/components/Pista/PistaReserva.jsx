@@ -14,8 +14,14 @@ const PistaReserva = (props) => {
         ubicacion:"",
         capacidad:""    
     })
+    const [realizarReserva, setRealizarReserva] = useState({
+        fecha : "",
+        idUsuario : "",
+        idPista : props.match.params.id
+    })
+    const history = useHistory()
 
-    // MOSTRAR DATOS DE PISTA A RESERVAR
+
     useEffect(() => {
         getPista()
     }, [props.match.params.id])
@@ -35,66 +41,58 @@ const PistaReserva = (props) => {
         .catch( error => console.log( error.response.data.message) )
     }
 
-    const history = useHistory()
+    const [reservaBorrarCorrecto, setReservaBorrarCorrecto] = useState("")
+    const [reservaBorrarError, setReservaBorrarError] = useState("")
 
-    // BORRAR PISTA
     const borrarPista = (event) => {
         event.preventDefault();
-        const pistaId = {
-            id : event.target.value
-        }
+        const pistaId = {id : event.target.value}
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}      
+
         axios.delete(`http://localhost:5000/pista/${pistaId.id}`, config)
         .then( response => {
-            console.log(response.data)
-            history.push("/pistas")
+            setReservaBorrarCorrecto(response.data.message)
+            setTimeout(() => {
+                history.go("/pistas")
+            }, 1000);
         })
-        .catch( error => { 
-            console.log(error.response)
-        })
+        .catch( error => setReservaBorrarError(error.response.data.message))
     }
 
-    const [realizarReserva, setRealizarReserva] = useState({
-        fecha : "",
-        idUsuario : "",
-        idPista : props.match.params.id
-    })
-    
-    // REALIZAR RESERVA
+    const [reservaRealizarCorrecto, setReservaRealizarCorrecto] = useState("")
+    const [reservaRealizarError, setReservaRealizarError] = useState("")
+
     const reservar = (event) => {
         event.preventDefault()
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = {headers:{Authorization:`Bearer ${token}`}}
         axios.post("http://localhost:5000/reserva", realizarReserva, config)
         .then(response => {
-            console.log(response.data)
+            setReservaRealizarCorrecto(response.data.message)
             setRealizarReserva(response.data.pista)
-            console.log(realizarReserva)
             setTimeout(() => {
                 history.push("/reservas/usuario")
             }, 1000);
         })
-        .catch(error => {
-            console.log(error.response)
-        })
+        .catch(error => setReservaRealizarError(error.response.data.message))
     }
 
-    // MODIFICAR PISTA
+    const [editarPistaCorrecto, setEditarPistaCorrecto] = useState("")
+    const [editarPistaError, setEditarPistaError] = useState("")
+
     const editarPista = () => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
     
         axios.put(`http://localhost:5000/pista/${props.match.params.id}`, {...PistaAReservar}, config)
         .then(response => {
-            console.log(response.data)
-            console.log("HOLA")
+            setEditarPistaCorrecto(response.data.message)
+            setTimeout(() => {
+                history.go("/pistas")
+            }, 1000);
         })
-        .catch(error => {
-            console.log(error.response.data)
-            console.log("ADIOS")
-        })
-
+        .catch(error => setEditarPistaError(error.response.data))
     }
 
     return(
@@ -109,20 +107,21 @@ const PistaReserva = (props) => {
                     <p><b>Capacidad:</b> {PistaAReservar.capacidad} Personas</p>
                 </div>
                 <div>
-                    {
-                        /* <h3>¿A que hora quieres jugar?</h3>
-                        <div>09:00</div>
-                        <div>10:00</div>
-                        <div>11:00</div>
-                        <div>12:00</div>
-                        <div>15:00</div>
-                        <div>16:00</div> */
-                    }
-                </div>
-                <div>
                     <button type="submit" value={props.match.params.id} onClick={reservar}>Realizar reserva</button>
                     <button type="submit" value={props.match.params.id} onClick={borrarPista}>Borrar pista</button>
-                    <button type="submit" value={props.match.params.id} onClick={editarPista}>Editar pista</button>    
+                    <button type="submit" value={props.match.params.id} onClick={editarPista}>Editar pista</button>
+                </div>
+                <div>
+                    {reservaBorrarCorrecto && <div><p>{reservaBorrarCorrecto}</p></div>}
+                    {reservaBorrarError && <div><p>{reservaBorrarError}</p></div>}
+                </div>
+                <div>
+                    {reservaRealizarCorrecto && <div><p>{reservaRealizarCorrecto}</p></div>}
+                    {reservaRealizarError && <div><p>{reservaRealizarError}</p></div>}
+                </div>
+                <div>
+                    {editarPistaCorrecto && <div><p>{editarPistaCorrecto}</p></div>}
+                    {editarPistaError && <div><p>{editarPistaError}</p></div>}
                 </div>
                 <PistaEditar datosPista={PistaAReservar} setPistaAReservar={setPistaAReservar}/>
             </div>

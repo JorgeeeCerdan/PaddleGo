@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import setAuthToken from "../../utility/AuthToken.jsx"
 import {ACCESS_TOKEN_NAME} from "../../constants/constants.jsx"
 import { Link } from "react-router-dom";
 import NavbarApp from '../NavbarApp.jsx'
@@ -10,21 +9,23 @@ import PistaCrear from "./PistaCrear";
 const Pistas = () => {
     
     const [pistas, setPistas] = useState([])
+    const [pistasCorrecto, setPistasCorrecto] = useState("")
+    const [pistasError, setPistasError] = useState("")
 
-    // GET DE TODAS LAS PISTAS
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
         
         axios.get("http://localhost:5000/pistas", config)
         .then(response => {
-            setAuthToken(ACCESS_TOKEN_NAME)
-            console.log(response.data.pistas)
+            if(response.data.pistas.length < 1){
+                setPistasError("Añade una pista para que tus usuarios puedan reservarla")
+            }
+            setPistasCorrecto(response.data.message)
             setPistas(response.data.pistas)
         })
-        .catch( error => {
-            console.log( error )
-        })
+        .catch(error => setPistasError(error.response.data.message))
+
     },[])
 
     return(
@@ -33,6 +34,10 @@ const Pistas = () => {
             <h2>Crear una pista nueva</h2>
             <PistaCrear/>
             <h2>Pistas para reservar 🏟️</h2>
+            <div>
+                {pistasCorrecto && <div><p>{pistasCorrecto}</p></div>}
+                {pistasError && <div><p>{pistasError}</p></div>}
+            </div>
             <div>
             {   
                 pistas.map( pista => (

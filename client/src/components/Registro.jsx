@@ -14,6 +14,10 @@ const Registro = () => {
         telefono: ""
     })
 
+        
+    const [errorRegister, setErrorRegister] = useState("")
+    const [correctRegister, setCorrectRegister] = useState("")
+
     const changeInputs = (event) => {
         setUserRegister({ ...userRegister, [event.target.name]: event.target.value})
     }
@@ -35,10 +39,17 @@ const Registro = () => {
             console.log(error.response.data.message)
         })
     }
-    
-    const [errorRegister, setErrorRegister] = useState("")
-    const [correctRegister, setCorrectRegister] = useState("")
-    
+
+    const resetFormRegistro = (event) => {
+        event.preventDefault()
+        setUserRegister({
+            nombre: "",
+            email: "",
+            password: "",
+            telefono: ""
+        })
+    }
+
     return(
         <div>
             <NavbarHome/>
@@ -83,8 +94,12 @@ const Registro = () => {
                 />
 
                 <button type="submit" onClick={submitForm}>Crear cuenta</button>
-                {errorRegister && <div><p>{errorRegister}</p></div>}
-                {correctRegister && <div><p>{correctRegister}</p></div>}
+                <button type="reset" onClick={resetFormRegistro}>Resetear formulario</button>
+
+                <div>
+                    {errorRegister && <div><p>{errorRegister}</p></div>}
+                    {correctRegister && <div><p>{correctRegister}</p></div>}
+                </div>
 
                 <p><Link to={"/login"}>¿Ya tienes cuenta? Inicia sesión</Link></p>
 

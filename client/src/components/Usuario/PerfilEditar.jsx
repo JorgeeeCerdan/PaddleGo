@@ -1,14 +1,17 @@
 import React, {useState} from 'react';
+import {useHistory} from 'react-router-dom'
 import { ACCESS_TOKEN_NAME } from '../../constants/constants';
 import axios from 'axios'
 
 const PerfilEditar = (props) =>{
     
     const infoUsuario = props.datosUsuario
-    console.log(infoUsuario)
 
     const [usuarioModificado, setUsuarioModificado] = useState({})
+    const [modificacionCorrecta, setModificacionCorrecta] = useState("")
+    const [modificacionError, setModificacionError] = useState("")
 
+    const history = useHistory()
     const modificarUsuario =  (event) => {
         event.preventDefault()
 
@@ -16,8 +19,14 @@ const PerfilEditar = (props) =>{
         const config = {headers:{Authorization : `Bearer ${token}`}}
 
         axios.put("http://localhost:5000/usuario", usuarioModificado, config)
-        .then(response => props.setPerfilUsuario(response.data.bodyActualizado))
-        .catch(error => console.log(error.response.data.message))
+        .then(response => {
+            setTimeout(() => {
+                props.setPerfilUsuario(response.data.bodyActualizado)
+                setModificacionCorrecta(response.data.message)
+                history.go("/usuario")
+            }, 1000);
+        })
+        .catch(error => setModificacionError(error.response.data.message))
 
     }
         const inputsUsuario = (event) => {
@@ -27,7 +36,16 @@ const PerfilEditar = (props) =>{
             })
         }
 
-        const resetForm = () => setUsuarioModificado("")
+        const resetFormModificarUsuario = (event) => {
+            event.preventDefault()
+            setUsuarioModificado({
+                nombre : "",
+                email : "",
+                password : "",
+                telefono : "",
+            })
+        }
+
 
 
     return(
@@ -63,7 +81,7 @@ const PerfilEditar = (props) =>{
                         <label htmlFor="password">Password: </label>
                         <input 
                             type="password" 
-                            name="email" 
+                            name="password" 
                             id="password" 
                             placeholder= "Introduce una password nueva" 
                             value={usuarioModificado.password}
@@ -85,8 +103,11 @@ const PerfilEditar = (props) =>{
 
 
                     <button type="submit" onClick={modificarUsuario}>Modificar usuario</button>
-                    <button type="submit" onClick={resetForm}>Borrar formulario</button>
+                    <button type="reset" onClick={resetFormModificarUsuario}>Borrar formulario</button>
                 </form>
+        
+                {modificacionCorrecta && <div>{modificacionCorrecta}</div>}
+                {modificacionError && <div>{modificacionError}</div>}
             <hr/>
         </div>
     )
