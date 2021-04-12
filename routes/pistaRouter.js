@@ -9,7 +9,7 @@ const { validationId, validationPista } = require("../controllers/validation.js"
 pistaRouter.get("/pistas", comprobarToken, (req,res)=>{
     try{
         pista.find({}, (err, pistas) => {
-            if(err) res.status(400).send(`No se pudo mostrar las pistas del centro`)
+            if(err) res.status(400).send({message:`No se pudo mostrar las pistas del centro`})
             else{res.status(200).send({
                 message : `Lista de pistas`,
                 pistas
@@ -29,7 +29,7 @@ pistaRouter.get("/pista/:id", comprobarToken, (req, res) => {
         validationId(id)
 
         pista.findById((id), (err, pista) => {
-            if(err){res.status(400).send(`No se pudo mostrar la pista que deseas buscar`);}
+            if(err){res.status(400).send({message:`No se pudo mostrar la pista que deseas buscar`});}
             if(pista == null) { res.status(400).send({
                 message : "No existe la pista seleccinada"
             })}
@@ -83,7 +83,9 @@ pistaRouter.put("/pista/:id", comprobarToken, (req,res) =>{
         validationId(id)
         
         pista.findByIdAndUpdate(id, pistaModificacion, {new: true}, (err, pistaActualizada) =>{
-            if(err) res.status(400).send(`La pista no ha podido actualizarse: ${err}`)
+            if(err) res.status(400).send({message:`La pista no ha podido actualizarse: ${err}`})
+            if(pistaActualizada.capacidad > 4) return res.status(400).send({message:"Maximo 4 personas por pista"})
+            if(pistaActualizada.capacidad < 2) return res.status(400).send({message:"Minimo 2 personas por pista"})
             else{ res.status(201).send({
                 message : `La pista ha sido modificada`,
                 pistaActualizada

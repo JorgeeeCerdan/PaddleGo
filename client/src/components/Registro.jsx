@@ -4,6 +4,7 @@ import axios from 'axios'
 import {ACCESS_TOKEN_NAME} from "../constants/constants.jsx"
 import setAuthToken from '../utility/AuthToken.jsx';
 import NavbarHome from './NavbarHome.jsx';
+import Footer from './Footer.jsx';
 
 const Registro = () => {
 
@@ -13,7 +14,6 @@ const Registro = () => {
         password: "",
         telefono: ""
     })
-
         
     const [errorRegister, setErrorRegister] = useState("")
     const [correctRegister, setCorrectRegister] = useState("")
@@ -32,7 +32,7 @@ const Registro = () => {
             localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token)
             setTimeout(() => {
                 history.push("/inicio")                
-            }, 2000);
+            }, 1000);
         })
         .catch( error => {
             setErrorRegister(error.response.data.message)
@@ -48,62 +48,56 @@ const Registro = () => {
             password: "",
             telefono: ""
         })
+        setErrorRegister("")
     }
 
     return(
         <div>
-            <NavbarHome/>
-            <h2>Cuentanos sobre ti</h2>
-            <p>Rellena los campos necesarios para crear tu cuenta</p>
-
-            <form action="POST" onSubmit={submitForm}>
-                <input
-                required 
-                type="text"
-                placeholder="Nombre completo"
-                name="nombre"
-                value={userRegister.nombre}
-                onChange={changeInputs}
-                />
-
-                <input
-                required
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={userRegister.email}
-                onChange={changeInputs}
-                />
-
-                <input 
-                required
-                type="password"
-                placeholder="Passoword"
-                name="password"
-                value={userRegister.password}
-                onChange = {changeInputs}
-                />
-                
-                <input 
-                required
-                type="text"
-                placeholder="Telefono de contacto"
-                name="telefono"
-                value={userRegister.telefono}
-                onChange={changeInputs}
-                />
-
-                <button type="submit" onClick={submitForm}>Crear cuenta</button>
-                <button type="reset" onClick={resetFormRegistro}>Resetear formulario</button>
-
-                <div>
-                    {errorRegister && <div><p>{errorRegister}</p></div>}
-                    {correctRegister && <div><p>{correctRegister}</p></div>}
+            <div className="container-fluid">
+                <div className="container my-5">
+                    <h1>Cuentanos sobre ti 📝</h1>
+                    <p className="text-body">Rellena los campos necesarios para crear tu cuenta</p>
                 </div>
+            </div>
 
-                <p><Link to={"/login"}>¿Ya tienes cuenta? Inicia sesión</Link></p>
+            <div className="container">
+                <div className="row">
+                {correctRegister && <div className="alert alert-success py-4"><strong>{correctRegister}</strong></div>}
+                {errorRegister && <div className="alert alert-danger py-4"><strong>{errorRegister}</strong></div>}
+                </div>
+            </div>
 
-            </form>
+            <div className="container-fluid">
+                <div className="container">
+                    <form action="POST" onSubmit={submitForm} >
+                        <div className="row bg-light p-5 rounded shadow">
+                        <h2 className="pb-4">Formulario de registro</h2>
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="nombre" class="form-label fw-bold" >Nombre de usuario</label>
+                                <input required className="form-control mb-4"  type="text" placeholder="Nombre completo" name="nombre" value={userRegister.nombre} onChange={changeInputs}/>
+                                <label htmlFor="email" class="form-label fw-bold" >Correo electronico</label>
+                                <input required className="form-control mb-4" type="email" placeholder="Email" name="email" value={userRegister.email} onChange={changeInputs}/>
+                            </div>
+                            <div className="col-sm-12 col-md-6">
+                                <label htmlFor="password" class="form-label fw-bold" >Contraseña</label>
+                                <input required className="form-control mb-4" type="password"placeholder="Passoword"name="password"value={userRegister.password}onChange = {changeInputs}/>
+                                <label htmlFor="telefono" class="form-label fw-bold" >Número de telefono</label>
+                                <input required className="form-control mb-4" type="text"placeholder="Telefono de contacto"name="telefono"value={userRegister.telefono}onChange={changeInputs}/>
+                            </div>
+                            <div className="col-12 mt-3 text-center">
+                                <button className="btn mx-2 my-2 btn-primary" type="submit" onClick={submitForm}>Crear cuenta</button>
+                                <button className="btn mx-2 my-2 btn-outline-primary" type="reset" onClick={resetFormRegistro}>Resetear formulario</button>
+                            </div>
+                            
+                            <p className="text-center mt-4">
+                                <Link to={"/login"} className="text-dark text-decoration-none text-body">¿Ya tienes cuenta? <b>Inicia sesión</b></Link>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <Footer/>
         </div>
     )
 

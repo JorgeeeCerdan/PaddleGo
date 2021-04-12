@@ -5,8 +5,6 @@ import axios from 'axios'
 
 const PerfilEditar = (props) =>{
     
-    const infoUsuario = props.datosUsuario
-
     const [usuarioModificado, setUsuarioModificado] = useState({})
     const [modificacionCorrecta, setModificacionCorrecta] = useState("")
     const [modificacionError, setModificacionError] = useState("")
@@ -46,69 +44,45 @@ const PerfilEditar = (props) =>{
             })
         }
 
-
-
     return(
         <div>
-            <hr/>
-                <h1>Modificar perfil de usuario</h1>
-                <form action="PUT">
-                    <div>
-                        <label htmlFor="nombre">Nombre: </label>
-                        <input 
-                            type="text" 
-                            name="nombre" 
-                            id="nombre" 
-                            placeholder="Introduce un nuevo nombre de usuario"
-                            value={usuarioModificado.nombre}
-                            onChange={inputsUsuario}
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="email">Email: </label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            id="email" 
-                            placeholder="Introduce un email nuevo"
-                            value={usuarioModificado.email}
-                            onChange={inputsUsuario}
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="password">Password: </label>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            id="password" 
-                            placeholder= "Introduce una password nueva" 
-                            value={usuarioModificado.password}
-                            onChange={inputsUsuario}
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="telefono">Telefono: </label>
-                        <input 
-                            type="telefono" 
-                            name="telefono" 
-                            id="telefono" 
-                            placeholder= "Introduce un numero de telefono nuevo" 
-                            value={usuarioModificado.telefono}
-                            onChange={inputsUsuario}
-                        />
-                    </div>
-
-
-                    <button type="submit" onClick={modificarUsuario}>Modificar usuario</button>
-                    <button type="reset" onClick={resetFormModificarUsuario}>Borrar formulario</button>
-                </form>
-        
-                {modificacionCorrecta && <div>{modificacionCorrecta}</div>}
-                {modificacionError && <div>{modificacionError}</div>}
-            <hr/>
+            <div className="container-fluid">
+                <div className="container my-5">
+                    <h1>Modificar perfil</h1>
+                    <p className="text-body">En caso de que te equivocaras al registrarte, con este formulario podras modificar los datos de tu perfil</p>
+                </div>
+            </div>
+            <div className="container">
+                <div className="row">
+                    {modificacionCorrecta && <div className="alert alert-success py-4"><strong>{modificacionCorrecta}</strong></div>}
+                    {modificacionError && <div className="alert alert-danger py-4"><strong>{modificacionError}</strong></div>}
+                </div>
+            </div>
+            <div className="container-fluid">
+                <div className="container">
+                    <form action="PUT">
+                        <div className="row bg-light p-5 rounded shadow">
+                            <h2 className="pb-3">Formulario de modificación de perfil de usuario</h2>
+                            <div className="col-sm-12 col-md-6">
+                                <label className="form-label fw-bold" htmlFor="nombre">Nombre: </label>
+                                <input className="form-control mb-4" type="text" name="nombre" id="nombre" placeholder="Introduce un nuevo nombre de usuario"value={usuarioModificado.nombre}onChange={inputsUsuario}/>
+                                <label className="form-label fw-bold" htmlFor="email">Email: </label>
+                                <input className="form-control mb-4" type="email" name="email" id="email" placeholder="Introduce un email nuevo"value={usuarioModificado.email}onChange={inputsUsuario}/>
+                            </div>
+                            <div className="col-sm-12 col-md-6">
+                                <label className="form-label fw-bold" htmlFor="password">Password: </label>
+                                <input className="form-control mb-4" type="password" name="password" id="password" placeholder= "Introduce una password nueva" value={usuarioModificado.password}onChange={inputsUsuario}/>
+                                <label className="form-label fw-bold" htmlFor="telefono">Telefono: </label>
+                                <input className="form-control mb-4" type="telefono" name="telefono" id="telefono" placeholder= "Introduce un numero de telefono nuevo" value={usuarioModificado.telefono}onChange={inputsUsuario}/>
+                            </div>
+                            <div className="col-12 mt-3 text-center">
+                                <button className="btn mx-3 my-2 btn-primary" type="submit" onClick={modificarUsuario}>Modificar usuario</button>
+                                <button className="btn mx-3 my-2 btn-outline-primary" type="reset" onClick={resetFormModificarUsuario}>Borrar formulario</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     )
 }

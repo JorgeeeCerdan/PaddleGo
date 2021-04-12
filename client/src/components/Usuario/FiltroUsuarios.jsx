@@ -31,38 +31,46 @@ const FiltroUsuarios = (props) => {
         history.go("/usuarios")
     }
 
-
     return(
         <div>
-            <label htmlFor="filtroUsuarios">
-                <input type="text" name="usuario" value={buscarUsuario} placeholder="Introduce el usuario a buscar" onChange={inputUsuario}/>
-                <button type="submit" onClick={filtrarUsuarios}>Buscar usuario</button>
-                <button type="reset" onClick={() => resetFilter()}>Borrar filtro</button>
-            </label>
-            <div>
-                {filtroError && <div><p>{filtroError}</p></div>}
-                {
-                    sacarUsuario && sacarUsuario.map(usuario => (
-                        <div key={usuario._id}>
-                            <hr/>
-                            {filtroCorrecto && <div><p>{filtroCorrecto}</p></div>}
-                            <div>
-                                <h3>Nombre completo</h3>
-                                <p>{usuario.nombre}</p>
-                            </div>
-                            <div>
-                                <h3>Correo electronico</h3>
-                                <p>{usuario.email}</p>
-                            </div>
-                            <div>
-                                <h3>Telefono</h3>
-                                <p>{usuario.telefono}</p>
-                            </div>
-                            <hr/>
-                        </div>
-                    ))
-                }
+
+            <div className="container-fluid">
+                <div className="container">
+                    <div className="row">
+                        <label htmlFor="filtroUsuarios" className="form-label fw-bold">Buscador de padelistas por nombre</label>
+                        <input className="form-control w-50" type="text" name="usuario" value={buscarUsuario} placeholder="Introduce el nombre del usuario a buscar" onChange={inputUsuario}/>
+                        <button className="btn btn-primary w-25" type="submit" onClick={filtrarUsuarios}>Buscar usuario</button>
+                        <button className="btn btn-outline-primary w-25" type="reset" onClick={() => resetFilter()}>Borrar filtro</button>
+                    </div>
+                </div>
             </div>
+
+
+            <div className="container-fluid my-5">
+                <div className="container">
+                        {filtroError && <div><p>{filtroError}</p></div>}
+                        {sacarUsuario && sacarUsuario.map(usuario => (
+                            <div key={usuario._id} className="row bg-light p-5 rounded shadow">
+                                {filtroCorrecto && <div><h3>{filtroCorrecto}</h3></div>}
+                                <div className="d-flex flex-nowrap">
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>Nombre completo</h4>
+                                        <p>{usuario.nombre}</p>
+                                    </div>
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>Correo electronico</h4>
+                                        <p>{usuario.email}</p>
+                                    </div>
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>Telefono</h4>
+                                        <p>{usuario.telefono}</p>
+                                    </div>                    
+                                </div>
+                            </div>
+                        ))}
+                </div>
+            </div>
+
         </div>
     )
 }

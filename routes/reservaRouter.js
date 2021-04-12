@@ -8,13 +8,13 @@ const {validationId, validationReserva} = require("../controllers/validation.js"
 // GET - Publica - Consulta de reservas
 reservaRouter.get("/reservas", (req, res) =>{
     try{
-    Reserva.find({}, (err, reservas) => {
-        if(err) return res.status(401).send(`No es fue posible mostrarte todas las reservas`)
-        else{res.status(200).send({
-            message : `Todas las reservas realizadas hasta el momento.`,
-            reservas
-        })}
-    })
+        Reserva.find({}, (err, reservas) => {
+            if(err) return res.status(400).send({message:`No es fue posible mostrarte todas las reservas`})
+            else{res.status(200).send({
+                message : `Todas las reservas realizadas hasta el momento.`,
+                reservas
+            })}
+        })
     }
     catch(error){
         res.status(400).send({ message : `Error al mostrar las reservas`, error})
@@ -31,7 +31,7 @@ reservaRouter.get("/reserva/:id", comprobarToken, (req,res)=>{
         .populate("idUsuario","nombre")
         .populate("idPista",["nombre","estado"])
         .exec((error, reserva) => {
-            if(error) return res.status(400).send(`Error, no se consiguio mostrar la reserva`)
+            if(error) return res.status(400).send({message:`Error, no se consiguio mostrar la reserva`})
             else{ res.status(200).send({
                 message : `Datos de la reserva ${reserva.id} realizada a nombre de ${reserva.idUsuario.nombre}`,
                 reserva
@@ -71,10 +71,10 @@ reservaRouter.get("/reservas/usuario", comprobarToken, (req, res)=>{
     try{
         const id = req.usuario.sub
         Reserva.find({idUsuario : id})
-        .populate("idUsuario","nombre")
-        .populate("idPista",["nombre","ubicacion"])
+        .populate("idUsuario",["nombre"])
+        .populate("idPista",["nombre", "ubicacion", "tipo", "capacidad"])
         .exec((error, reservas)=>{
-            if(error) res.status(400).send({message:"ZIZUUUUU"})
+            if(error) res.status(400).send({message:"Error, no se pudo mostrar el historial de reservas"})
             else{res.status(200).send({
                 message : `Historial de reservas realizadas`,
                 reservas
@@ -116,7 +116,7 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{
     console.log(id)
     Reserva.findById(id, (err, reserva) =>{
         if(err) return res.status(400).send({message:'No se pudo borrar la reserva'})
-        if(reserva.idUsuario != req.usuario.sub) return res.status(401).send(`Solamente quien hizo la reserva puede borrarla`)
+        if(reserva.idUsuario != req.usuario.sub) return res.status(401).send({message:`Solamente quien hizo la reserva puede borrarla`})
 
         reserva.deleteOne()
         .then((reserva) => res.status(200).send({ message : `La reserva fue borrada existosamente.`, reserva}))

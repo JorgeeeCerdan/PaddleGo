@@ -1,5 +1,4 @@
 import React, {useState, useEffect, Fragment} from 'react'
-import {Link} from 'react-router-dom'
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx'
@@ -29,42 +28,42 @@ const Reservas = () =>{
         <Fragment>
             <NavbarApp/>
             <div>
-                <button><Link to={"/inicio"}>Boton/icono volver atras</Link></button>
-                <h2>Reservas 🎾</h2>
-                <div>
-                    {reservasCorrecto && <div><p>{reservasCorrecto}</p></div>}
-                    {reservasError && <div><p>{reservasError}</p></div>}
-                </div>
-                <div>
-                    <FiltroReservas reservas={reservas}/>
-                </div>
-                {
-                    reservas.map(element => (
-                        <div key={element._id}>
-                        <div>
-                            <img className="pruebaImg" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt=""/>
-                        </div>                                
-                        <div>
-                            <div>
-                                <h3>Fecha realizada:</h3>
-                                <p>{moment(element.fecha).format('LLLL')}</p>
-                            </div>
-                            <div>
-                                <h3>Codigo de reserva:</h3>
-                                <p>{element._id}</p>
-                            </div>
-                            <div>
-                                <h3>Codigo de usuario:</h3>
-                                <p>{element.idUsuario}</p>
-                            </div>
-                            <div>
-                                <h3>Codigo de pista:</h3>
-                                <p>{element.idPista}</p>
-                            </div>
-                        </div>
+
+                <div className="container-fluid">
+                    <div className="container my-5">
+                        <h1>Reservas registradas en PaddleGO 🎾</h1>
+                        {reservasCorrecto && <div><p className="text-body">{reservasCorrecto}</p></div>}
+                        {reservasError && <div><p className="text-body">{reservasError}</p></div>}
                     </div>
-                ))
-            }
+                </div>
+
+                <FiltroReservas reservas={reservas}/>
+
+                <div className="container-fluid">
+                    <div className="container">
+                        <table className="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Reserva realizada a fecha de</th>
+                                    <th scope="col">idReserva</th>
+                                    <th scope="col">idUsuario</th>
+                                    <th scope="col">idPista</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {reservas.map( element => (
+                                <tr key={element._id}>
+                                    <td>{moment(element.fecha).format("LLL")}</td>
+                                    <td>{element._id}</td>
+                                    <td>{element.idUsuario}</td>
+                                    <td>{element.idPista}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </Fragment>
     )

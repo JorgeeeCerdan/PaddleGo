@@ -31,33 +31,39 @@ const Pistas = () => {
     return(
         <div>
             <NavbarApp />
-            <h2>Crear una pista nueva</h2>
             <PistaCrear/>
-            <h2>Pistas para reservar 🏟️</h2>
-            <div>
-                {pistasCorrecto && <div><p>{pistasCorrecto}</p></div>}
-                {pistasError && <div><p>{pistasError}</p></div>}
-            </div>
-            <div>
-            {   
-                pistas.map( pista => (
-                    <Link to={`/pista/${pista._id}`} key={pista._id}>
-                        <div>
-                            <div>
-                                <img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt="Stadium"/>
-                            </div>
-                            <div>
-                                <p>{pista.nombre}</p>
-                                <p>Tipo:{pista.tipo}</p>
-                                <p>Ubicación:{pista.ubicacion}</p>
-                                <p>Capacidad:{pista.capacidad}</p>
-                            </div>
+
+            <div className="container-fluid">
+                <div className="container">
+                    <div className="row">
+                       <div className="col-sm-12 col-md-6 col-lg-4 py-4 ">
+                            {pistasCorrecto && <h1 className="fw-bold">{pistasCorrecto}</h1>}
+                            {pistasError && <h1 className="fw-bold">{pistasError}</h1>}
                         </div>
-                    </Link>
-                ))
-            }
+                    </div>
+                </div>
             </div>
+
+            <div className="container-fluid mb-5">
+                <div className="container">
+                    <div className="row">
+                        {pistas.map( pista => (
+                            <Link to={`/pista/${pista._id}`} key={pista._id} className="text-decoration-none col-sm-12 col-md-6 col-lg-4 p-5 m-4 rounded shadow flex-fill">
+                                <div className="text-center">
+                                    <img className="img-fluid" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt="Stadium"/>
+                                    <h2 className="text-center pt-2 pb-2 text-break fw-bold text-dark">{pista.nombre}</h2>
+                                    <p className="fw-light text-break text-body"><b>Tipo:</b> {pista.tipo}</p>
+                                    <p className="fw-light text-break text-body"><b>Ubicación:</b> {pista.ubicacion}</p>
+                                    <p className="fw-light text-break text-body"><b>Capacidad:</b> {pista.capacidad}</p>
+                                </div>      
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
         </div>
+        
     )
 }
 

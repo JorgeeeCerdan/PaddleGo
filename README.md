@@ -22,16 +22,178 @@ Características de PaddleGo:
 
 # Technical description
 
-1. Modelos
-2. Rutas: Usuario, pista, reservas.
-3. Validaciones
-4. Json Web Token
-5. Dependencias disponibles
-6. Scripts disponibles
+1. FrontEnd
+    * Components
+    * Utility
+
+2. BackEnd
+    * Modelos
+    * Rutas: Usuario, pista, reservas.
+    * Validaciones
+    * Json Web Token
+    * Dependencias disponibles
+    * Scripts disponibles
 
 ---
 
-## 1. Modelos
+# **Front End PaddleGo**
+
+## Components
+
+La parte de cliente ha sido desarrollada con React. A continuacion se mostraran los componentes desarrollados y su funcion como componente.
+
+1. InicioPromo.jsx:
+    ```
+    const InicioPromo = () => {}
+    ```
+    Primera página de contacto con el usuario donde se muestra de forma resumida de que trata la aplicacion. Sirve como portal de acceso para usuarios que quieran registrarse en la aplicación o iniciar sesión.
+
+2. Login.jsx:
+    ```
+    const submitLoginForm = (e) => {}
+    const resetFormLogin = (event) => {}
+    ```
+    - Formulario que ejecuta un Axios con el metodo http "POST" para iniciar sesión, se solicita por medio de inputs un correo existente y una password correcta.
+
+3. Registro.jsx:
+    ```
+    const submitForm = (e) => {}
+    const resetFormRegistro = (event) => {}
+    ```
+    - Formulario que ejecuta un Axios con el metodo http "POST" para registrar un usuario en la aplicación de PaddleGo, se solicita por medio de inputs informacion básica como: Nombre, correo electronico, password, telefono de contacto.
+
+4. Footer.jsx:
+    ```
+    const Footer = () => {}
+    ```
+    - Componente visual e informativo que muestra al creador de la aplicación de PaddleGo y sus redes sociales de Github y Linkedin.
+
+5. InicioApp.jsx:
+    ```
+    const InicioApp = () => {}
+    ```
+    - Página de inicio de la aplicación de PaddleGo que realiza Axios con el metodo http "GET" para recoger toda la información que exista del usuario registrado.
+
+6. Usuarios.jsx:
+    ```
+    const Usuarios = () => {}
+    ```
+    - Muestra todos los usuarios registrados en PaddleGO en una tabla. Página dedicada a los administradores de la aplicación. Realiza un Axios con el metodo "GET" para poder mostrar todos los usuarios.
+
+7. FiltroUsuarios.jsx:
+    ```
+    const BorrarUsuario = ({setPerfilUsuario}) => {}
+    const handleDelete = () => {}
+    ```
+    - Componente hijo de 6.Usuarios.jsx. Con la data extraida del padre realiza un filter entre todos los usuarios y lo destaca.
+
+8. PerfilUsuario.jsx:
+    ```
+    const PerfilUsuario = () => {}
+    ```
+    - Recoge todos los datos personales del usuario gracias a recoger por el token el id del usuario por medio de un Axios con el metodo http "GET".
+
+9. PerfilEditar.jsx:
+    ```
+    const modificarUsuario = () => {}
+    const inputsUsuario = (event) => {}
+    const modificarUsuario =  (event) => {}
+    ```
+    - Componente hijo de 7.PerfilUsuario.jsx. Recoge por props la data del usuario y por medio de los inputs de un formulario recoge la informacion que pasara al backend por medio de un Axios con el metodo http "PUT".
+
+10. CerrarSesion.jsx:
+    ```
+    const CerrarSesion = () => {}
+    const handleLogout = () => {}
+    ```
+    - Componente hijo de 7.PerfilUsuario.jsx. Elimina el token del usuario del localstorage y redirige a la ruta raiz del proyecto.
+
+11. BorrarUsuario.jsx:
+    ```
+    const BorrarUsuario = ({setPerfilUsuario}) => {}
+    const handleDelete = () => {}
+    ```
+    - Componente hijo de 7.PerfilUsuario.jsx. Utiliza un Axios con el metodo http "DELETE" para borrar al usuario de la base de datos y redirige a la ruta raiz del proyecto.
+
+12. Pistas.jsx:
+    ```
+    const Pistas = () => {}
+    ```
+    - Recoge todas las pistas registradas en la aplicación por medio de un Axios con el metodo http "GET" y los muestra por pantalla.
+
+13. PistaCrear.jsx:
+    ```
+    const PistaCrear = () => {}
+    ```
+    - Recoge de un formulario el value de cada input y seguidamente con un Axios con el metodo http "POST" crea la pista y la muestra.
+
+14. PistaReserva.jsx:
+    ```
+    const PistaReserva = (props) => {}
+    const getPista = () => {}
+    const borrarPista = (event) => {}
+    const reservar = (event) => {}
+    ```
+    - Componente hijo de 12.PerfilUsuario.jsx. Muestra las caracteristicas de la pista a reservar elegida (nombre de pista, tipo de pista, ubicacion, estado y capacidad). A los usuarios da la opcion de reservar la pista gracias a un axios con el metodo http "POST" y a los administradores les da la posibilidad de borrar la pista con un Axios "DELETE".
+
+15. PistaEditar.jsx:
+    ```
+    const modificarPista = (event) => {}
+    ```
+    - Permite editar las caracteristicas de las pistas (nombre de pista, tipo de pista, ubicacion, estado y capacidad) gracias a un Axios "PUT" de la pista
+
+16. Reservas.jsx:
+    ```
+    const Reservas = () =>{}
+    ```
+    - Muestra todas las reservas realizadas en PaddleGO en una tabla. Página dedicada a los administradores de la aplicación. Realiza un Axios con el metodo "GET" para poder mostrar todas las reservas.
+
+17. FiltroReservas.jsx:
+    ```
+    const FiltroReservas = ({reservas}) => {}
+    const filtrarReservas = (event) => {}
+    const resetFilter = () => {}
+    ```
+    - Componente hijo de 6.Usuarios.jsx. Con la data extraida del padre realiza un filter entre todos los usuarios y lo destaca.
+
+18. ReservasUsuario.jsx:
+    ```
+    const ReservasUsuario = () => {}
+    const handleBorrarReserva = (event) => {}
+    ```
+    - Muestra todas las reservas realizadas por el usuario logeado gracias a un Axios "GET" y da la opcion a que el usuario borre la reserva gracias a un Axios "Delete" a traves de un boton
+
+19. ReservaConcreta.jsx:
+    ```
+    const ReservaConcreta = (props) => {}
+    ```
+    - Componente destinado a mostrar la informacion concreta de una reserva concreta.
+
+## Utility
+
+Recopilación de funciones dirigida a la funcionalidad de la aplicacion.
+
+1. AuthToken.jsx:
+    ```
+    const setAuthToken = token => {}
+    ```
+    - Una vez registrado o logeado esta funcion pondra el token en la cabecera para agilizar los Axios.
+
+2. PrivateRouter.jsx:
+    ```
+    function PrivateRoute({ children, ...rest }) {
+    ```
+    - Convierte los Router de React Router en privados comprobando si tiene token o no, en caso de que no tenga lo envia a la pagina de login en el caso de PaddleGo
+
+## Wireframes and Routers
+
+![WireframesAndRouters](./imgsReadme/WireframesAndRouters.png)
+
+---
+
+# **Back End PaddleGo**
+
+## Modelos
 
 ![ModelsOfData](./imgsReadme/ModelsOfData.png)
 
@@ -39,9 +201,7 @@ Características de PaddleGo:
 - Pista : Nombre, estado, tipo, ubicación, capacidad, idReserva
 - Reserva : idUsuario, idPista, fecha
 
-----
-
-## 2.1. Rutas relacionadas con el modelo usuario
+## Rutas relacionadas con el modelo usuario
 
 ```
 usuarioRouter.get("/usuarios")
@@ -73,9 +233,8 @@ usuarioRouter.delete("/usuario")
 ```
 - Ruta privada que hace uso del metodo http "delete" con la que se puede borrar el usuario registrado en la base de datos de PaddleGo.
 
-----
 
-## 2.2. Rutas relacionadas con el modelo pista
+## Rutas relacionadas con el modelo pista
 
 ````
 pistaRouter.get("/pistas")
@@ -102,9 +261,8 @@ pistaRouter.delete("/pista/:id")
 ```
 - Ruta privada que hace uso del metodo http "delete" con la finalidad de borrar una pista creada.
 
-----
 
-## 2.3. Rutas relacionadas con el modelo reserva
+## Rutas relacionadas con el modelo reserva
 
 ```
 reservaRouter.get("/reservas")
@@ -136,9 +294,7 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{})
 ```
 - Ruta privada que hace uso del metodo http "get" con el que podemos borrar una reserva realizada.
 
----
-
-## 3. Validaciones
+## Validaciones
 
 - validationId(id){}: Valida la string de Mongo según el número de caracteres que tenga.
 
@@ -150,9 +306,8 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{})
 
 - validationArray(array){}: Valida si es un array por medio del tipo de objeto
 
----
 
-## 4. Json Web Token (Jwt)
+## Json Web Token (Jwt)
 
 - crearToken(usuarioToken){}: Creacion del Token
 
@@ -160,7 +315,9 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{})
 
 ----
 
-## 5. Dependencias disponibles
+## Dependencias disponibles
+
+### Dependencias Backend
 
 - Node v15.10.0
 
@@ -176,22 +333,45 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{})
 
 - moment v2.29.1
 
-- validator v13.5.
+- validator v13.5.2
 
 - bcrypt v5.0.1
 
 - jsonwebtoken v8.5.1
 
-## 6. Scripts disponibles
+- concurrently 6.0.0
 
-- Npm run dev: Inicializa el servidor y reinicia automáticamente la aplicación node cuando se detectan cambios de archivos en el directorio.
+- cors 2.8.5
+
+### Dependencias Frontend 
+
+- axios 0.21.1
+
+- moment 2.29.1
+
+- react 17.0.2
+
+- react-dom 17.0.2
+
+- react-router-dom 5.2.0
+
+- react-scripts 4.0.3
+
+- react-select 4.3.0
+
+- web-vitals 1.1.1
+
+
+## Scripts disponibles
+
+- Npm run dev: Inicializa el backend y el frontend de forma simultanea
 
 - Npm run inspect: Inicializa la ejecucion del inpsector.
 
 
 # Tecnologías
 
-Html, Css, Javascript, Node.js, Npm, Express, Mongoose, Mongo, React.
+Html, Bootstrap 5, Javascript, Node.js, Npm, Express, Mongoose, React, Axios, Postman
 
 
 # Versiones

@@ -29,41 +29,45 @@ const Usuarios = () =>{
         <Fragment>
         <NavbarApp/>
         <div>
-            <h2>Usuarios registrados en PaddleGO 👤</h2>
-            { usuariosCorrecto && <div><p>{usuariosCorrecto}</p></div>}
-            { usuariosError && <div><p>{usuariosError}</p></div>}
-                <FiltroUsuarios usuarios={usuarios}/>
-            <div>
-                {
-                    usuarios.map( element => (
-                        <div key={element._id}>
-                        <div>
-                            <div>
-                                <h3>Nombre completo</h3>
-                                <p>{element.nombre}</p>
-                            </div>
-                            <div>
-                                <h3>Correo electronico</h3>
-                                <p>{element.email}</p>
-                            </div>
-                            <div>
-                                <h3>Password</h3>
-                                <p>*****</p>
-                            </div>
-                            <div>
-                                <h3>Telefono</h3>
-                                <p>{element.telefono}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <h3>Borrar cuenta</h3>
-                            <p>Se borrara la cuenta y todos los datos del usuario ademas de los generados por el mismo. ¿Esta seguro de borra la cuenta?</p>
-                            <button>Borrar cuenta</button>
-                        </div>
-                    </div>
-                ))
-            }
+
+            <div className="container-fluid">
+                <div className="container my-5">
+                    <h1>Usuarios registrados en PaddleGO 👤</h1>
+                    {usuariosCorrecto && <div><p className="text-body">{usuariosCorrecto}</p></div>}
+                    {usuariosError && <div><p className="text-body">{usuariosError}</p></div>}
+                </div>
             </div>
+
+            <FiltroUsuarios usuarios={usuarios}/>
+
+
+            <div className="container-fluid">
+                <div className="container">
+                    <table className="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Password</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {usuarios.map( element => (
+                            <tr key={element._id}>
+                                <td>{element._id}</td>
+                                <td>{element.nombre}</td>
+                                <td>{element.email}</td>
+                                <td>{element.telefono}</td>
+                                <td>*****</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
         </Fragment>
     )

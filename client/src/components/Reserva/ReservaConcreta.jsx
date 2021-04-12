@@ -7,8 +7,6 @@ import "moment/locale/es"
 const ReservaConcreta = (props) => {
 
     console.log(props)
-    console.log("ESTOY AQUI")
-
     const [reservaUnica, setReservaUnica] = useState({
         fecha : "",
         idUsuario: "",
@@ -38,8 +36,8 @@ const ReservaConcreta = (props) => {
     return(
         <div>
             <div>
-                {reservaConcreataCorrecto && <div><p>{reservaConcreataCorrecto}</p></div>}
-                {reservaConcretaError && <div><p>{reservaConcretaError}</p></div>}
+                {reservaConcreataCorrecto && <div className="alert alert-success py-4"><p>{reservaConcreataCorrecto}</p></div>}
+                {reservaConcretaError && <div className="alert alert-danger py-4"><p>{reservaConcretaError}</p></div>}
             </div>
             <div key={props.id}>
                <h2>{props.match.params.id}</h2>

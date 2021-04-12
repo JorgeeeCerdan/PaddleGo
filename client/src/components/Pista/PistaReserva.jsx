@@ -19,9 +19,15 @@ const PistaReserva = (props) => {
         idUsuario : "",
         idPista : props.match.params.id
     })
+    
+    const [reservaBorrarCorrecto, setReservaBorrarCorrecto] = useState("")
+    const [reservaBorrarError, setReservaBorrarError] = useState("")
+    const [reservaRealizarCorrecto, setReservaRealizarCorrecto] = useState("")
+    const [reservaRealizarError, setReservaRealizarError] = useState("")
+
     const history = useHistory()
-
-
+    
+    
     useEffect(() => {
         getPista()
     }, [props.match.params.id])
@@ -40,10 +46,7 @@ const PistaReserva = (props) => {
         })
         .catch( error => console.log( error.response.data.message) )
     }
-
-    const [reservaBorrarCorrecto, setReservaBorrarCorrecto] = useState("")
-    const [reservaBorrarError, setReservaBorrarError] = useState("")
-
+    
     const borrarPista = (event) => {
         event.preventDefault();
         const pistaId = {id : event.target.value}
@@ -54,14 +57,12 @@ const PistaReserva = (props) => {
         .then( response => {
             setReservaBorrarCorrecto(response.data.message)
             setTimeout(() => {
-                history.go("/pistas")
+                history.push("/pistas")
             }, 1000);
         })
         .catch( error => setReservaBorrarError(error.response.data.message))
     }
 
-    const [reservaRealizarCorrecto, setReservaRealizarCorrecto] = useState("")
-    const [reservaRealizarError, setReservaRealizarError] = useState("")
 
     const reservar = (event) => {
         event.preventDefault()
@@ -78,53 +79,42 @@ const PistaReserva = (props) => {
         .catch(error => setReservaRealizarError(error.response.data.message))
     }
 
-    const [editarPistaCorrecto, setEditarPistaCorrecto] = useState("")
-    const [editarPistaError, setEditarPistaError] = useState("")
-
-    const editarPista = () => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
-    
-        axios.put(`http://localhost:5000/pista/${props.match.params.id}`, {...PistaAReservar}, config)
-        .then(response => {
-            setEditarPistaCorrecto(response.data.message)
-            setTimeout(() => {
-                history.go("/pistas")
-            }, 1000);
-        })
-        .catch(error => setEditarPistaError(error.response.data))
-    }
-
     return(
         <Fragment>
             <NavbarApp/>
-            <div>
-                <h2>Pista elegida🏟️</h2>
-                <div key={PistaAReservar._id}>
-                    <h3>{PistaAReservar.nombre} 🏟️</h3>
-                    <p><b>Tipo:</b> {PistaAReservar.tipo}</p>
-                    <p><b>Ubicacion:</b> {PistaAReservar.ubicacion}</p>
-                    <p><b>Capacidad:</b> {PistaAReservar.capacidad} Personas</p>
+            <div className="container-fluid">
+                <div className="container">
+                    <div className="row">
+                        <div>
+                            {reservaBorrarCorrecto && <div className="alert alert-success py-4"><p>{reservaBorrarCorrecto}</p></div>}
+                            {reservaBorrarError && <div className="alert alert-danger py-4"><p>{reservaBorrarError}</p></div>}
+                            {reservaRealizarCorrecto && <div className="alert alert-success py-4"><p>{reservaRealizarCorrecto}</p></div>}
+                            {reservaRealizarError && <div className="alert alert-danger py-4"><p>{reservaRealizarError}</p></div>}
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <button type="submit" value={props.match.params.id} onClick={reservar}>Realizar reserva</button>
-                    <button type="submit" value={props.match.params.id} onClick={borrarPista}>Borrar pista</button>
-                    <button type="submit" value={props.match.params.id} onClick={editarPista}>Editar pista</button>
-                </div>
-                <div>
-                    {reservaBorrarCorrecto && <div><p>{reservaBorrarCorrecto}</p></div>}
-                    {reservaBorrarError && <div><p>{reservaBorrarError}</p></div>}
-                </div>
-                <div>
-                    {reservaRealizarCorrecto && <div><p>{reservaRealizarCorrecto}</p></div>}
-                    {reservaRealizarError && <div><p>{reservaRealizarError}</p></div>}
-                </div>
-                <div>
-                    {editarPistaCorrecto && <div><p>{editarPistaCorrecto}</p></div>}
-                    {editarPistaError && <div><p>{editarPistaError}</p></div>}
-                </div>
-                <PistaEditar datosPista={PistaAReservar} setPistaAReservar={setPistaAReservar}/>
             </div>
+
+            <div className="container-fluid my-4">
+                <div className="container">
+                    <div className="row bg-light p-5 rounded shadow" key={PistaAReservar._id}>
+                        <h1>Pista elegida 🏟️</h1>
+                        <div className="col-sm-6">
+                            <h3>{PistaAReservar.nombre}</h3>
+                            <p><b>Tipo: </b>{PistaAReservar.tipo}</p>
+                            <p><b>Ubicación: </b>{PistaAReservar.ubicacion}</p>
+                            <p><b>Capacidad: </b>{PistaAReservar.capacidad} Personas</p>
+                        </div>
+                        <div className="col-sm-6">
+                            <button className="btn mb-4 w-100 btn-primary" type="submit" value={props.match.params.id} onClick={reservar}>Realizar reserva</button>
+                            <button className="btn mb-4 w-100 btn-outline-primary" type="submit" value={props.match.params.id} onClick={borrarPista}>Borrar pista</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <PistaEditar datosPista={PistaAReservar} setPistaAReservar={setPistaAReservar}/>
+
         </Fragment>
     )
 }

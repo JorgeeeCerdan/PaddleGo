@@ -10,7 +10,7 @@ const {crearToken, comprobarToken} = require(`../controllers/authToken`);
 usuarioRouter.get("/usuarios", comprobarToken, (req, res) => {
     try{
         Usuario.find({}, (error, usuarios) => {
-            if(error) return res.status(400).send(`No es posible mostrarte todos los usuarios`)
+            if(error) return res.status(400).send({message:`No es posible mostrarte todos los usuarios`})
             else{ res.status(200).send({
                 message : `Lista de usuarios registrados`,
                 usuarios
@@ -50,11 +50,11 @@ usuarioRouter.post("/registro", async (req,res) => {
         validationRegister(nombre, email, password, telefono)
         
         const matchNombre = await Usuario.findOne({nombre})
-        if(matchNombre){ return res.status(400).send(`El nombre: ${nombre} introducido ya existe`)}
+        if(matchNombre){ return res.status(400).send({message:`El nombre: ${nombre} introducido ya existe`})}
         const matchEmail = await Usuario.findOne({email})
-        if(matchEmail){ return res.status(400).send(`El Email: ${email} introducido ya existe`)}
+        if(matchEmail){ return res.status(400).send({message:`El Email: ${email} introducido ya existe`})}
         const matchTelefono = await Usuario.findOne({telefono})
-        if(matchTelefono){ return res.status(400).send(`El telefono: ${telefono} introducido ya existe`)}
+        if(matchTelefono){ return res.status(400).send({message:`El telefono: ${telefono} introducido ya existe`})}
         
         // Hash password
         const salt = await bcrypt.genSalt(12);
@@ -88,10 +88,10 @@ usuarioRouter.post("/login", async (req, res)=>{
         validationLogin(email, password)
 
         const usuario = await Usuario.findOne({email: req.body.email})
-        if (!usuario) return res.status(401).send("El usuario no existe")            
+        if (!usuario) return res.status(401).send({message:"El usuario no existe"})            
         
         const compararPassword = await bcrypt.compare(req.body.password, usuario.password)
-        if (!compararPassword) return res.status(401).send("Contraseña incorrecta")
+        if (!compararPassword) return res.status(401).send({message:"Contraseña incorrecta"})
         
         return res.status(200).send({
             message: `Bienvenido a tu sesión ${usuario.nombre}`,
@@ -99,7 +99,7 @@ usuarioRouter.post("/login", async (req, res)=>{
         }) 
 
     } catch{
-        res.status(400).send(`Error al iniciar sesion, vuelva a intentarlo`)
+        res.status(400).send({message:`Error al iniciar sesion, vuelva a intentarlo`})
     }
 })
 
@@ -124,8 +124,8 @@ usuarioRouter.put("/usuario", comprobarToken, (req,res) =>{
 usuarioRouter.delete("/usuario", comprobarToken, (req,res) => {
     const id = req.usuario.sub
     Usuario.findByIdAndDelete(id, (err, cuentaEliminada) =>{
-        if(err) return res.status(400).send(`Tu cuenta no pudo borrarse en estos momentos, pruebe mas tarde`)
-        if(cuentaEliminada) return res.send("Usuario borrado exitosamente")
+        if(err) return res.status(400).send({message:`Tu cuenta no pudo borrarse en estos momentos, pruebe mas tarde`})
+        if(cuentaEliminada) return res.send({message:"Usuario borrado exitosamente"})
     })
 })
 

@@ -9,11 +9,11 @@ import 'moment/locale/es'
 const ReservasUsuario = () => {
 
     const [reservasUsuario, setReservasUsuario] = useState([])
-
     const [reservasUsuarioCorrecto, setReservasUsuarioCorrecto] = useState("")
     const [reservasUsuarioError, setReservasUsuarioError] = useState("")
     const [reservasUsuarioDeleteCorrecto, setReservasUsuarioDeleteCorrecto] = useState("")
     const [reservasUsuarioDeleteError, setReservasUsuarioDeleteError] = useState("")
+    console.log(reservasUsuario)
 
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
@@ -54,35 +54,38 @@ const ReservasUsuario = () => {
     
     return(
         <div>
-            <div>
             <NavbarApp/>
-            </div>
-            <div>
-                <h1>Reservas realizadas por ti.</h1>  
-            </div>
-            <div>
-                {reservasUsuarioCorrecto && <div><p>{reservasUsuarioCorrecto}</p></div>}
-                {reservasUsuarioError && <div><p>{reservasUsuarioError}</p></div>}
-            </div>
-            <div>
-                {reservasUsuarioDeleteCorrecto && <div><p>{reservasUsuarioDeleteCorrecto}</p></div>}
-                {reservasUsuarioDeleteError && <div><p>{reservasUsuarioDeleteError}</p></div>}
+
+            <div className="container-fluid">
+                <div className="container my-3">
+                    <h1>Reservas realizadas</h1>
+                    {reservasUsuarioCorrecto && <div><p className="fw-bold">{reservasUsuarioCorrecto}</p></div>}
+                    {reservasUsuarioError && <div><p className="fw-bold">{reservasUsuarioError}</p></div>}
+                    {reservasUsuarioDeleteCorrecto && <div className="alert alert-success py-4"><p>{reservasUsuarioDeleteCorrecto}</p></div>}
+                    {reservasUsuarioDeleteError && <div className="alert alert-danger py-4"><p>{reservasUsuarioDeleteError}</p></div>}
+                </div>
             </div>
 
-            {
-                reservasUsuario.map( reserva => (
-                    <div key={reserva._id}>
-                        <div>
-                            <h2>{moment(reserva.fecha).format('LLL')}</h2>
-                            <h2>{reserva.idUsuario.nombre}</h2>
-                            <h2>{reserva.idPista.nombre}</h2>
-                        </div>
-                        <div>
-                            <button type="submit" value={reserva._id} onClick={handleBorrarReserva}>Borrar reserva</button>
-                        </div>
+            <div className="container-fluid">
+                <div className="container">
+                    <div className="row">
+                        {reservasUsuario.map( reserva => (
+                            <div key={reserva._id} className="text-decoration-none col-sm-12 col-md-6 col-lg-4 p-5 m-4 rounded shadow flex-fill">
+                                <div>
+                                    <h3>Reserva realizada a fecha de…</h3>
+                                    <p className="text-body">{moment(reserva.fecha).format('LLLL')}</p>
+                                    <h3>Pista reservada</h3>
+                                    <p className="text-body">{reserva.idPista.nombre} - {reserva.idPista.ubicacion} - {reserva.idPista.tipo} - {reserva.idPista.capacidad} Personas</p>
+                                </div>
+                                <div>
+                                    <button className="btn btn-outline-primary w-100" type="submit" value={reserva._id} onClick={handleBorrarReserva}>Borrar reserva</button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))
-            }
+                </div>
+            </div>
+
         </div>
     )
 }

@@ -11,6 +11,8 @@ const FiltroReservas = ({reservas}) => {
     const [filtroCorrecto, setFiltroCorrecto] = useState("")
     const [filtroError, setFiltroError] = useState("")
 
+    console.log(BuscarReserva)
+
     
     const inputReserva = (event) => setBuscarReserva(event.target.value)
 
@@ -37,49 +39,45 @@ const FiltroReservas = ({reservas}) => {
 
     return(
         <div>
-            <div>
-                <label htmlFor="filtroReservas"></label>
-                <input  type="text" placeholder="Introduce el numero para buscar una reserva" value={BuscarReserva} onChange={inputReserva}/>
-                <button type="submit" onClick={filtrarReservas}>Buscar reserva</button>
-                <button type="reset" onClick={resetFilter}>Borrar filtro</button>
-            </div>
-            <div>
-                <h1>{filtroError && <div><p>{filtroError}</p></div>}</h1>
-            </div>
-            <div> 
-                {
-                    sacarValor && sacarValor.map(element => (
-                        <div key={element._id}>
-                            <hr/>
-                                <h1>{filtroCorrecto && <div><p>{filtroCorrecto}</p></div>}</h1>
-                            <div>
-                                <img className="pruebaImg" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/stadium_1f3df-fe0f.png" alt=""/>
-                            </div>                                
 
-                            <div>
-                                <div>
-                                    <h3>Fecha realizada:</h3>
-                                    <p>{moment(element.fecha).format('LLLL')}</p>
-                                </div>
-                                <div>
-                                    <h3>Codigo de reserva:</h3>
-                                    <p>{element._id}</p>
-                                </div>
-                                <div>
-                                    <h3>Codigo de usuario:</h3>
-                                    <p>{element.idUsuario}</p>
-                                </div>
-                                <div>
-                                    <h3>Codigo de pista:</h3>
-                                    <p>{element.idPista}</p>
-                                </div>
-                            </div>
-                        
-                            <hr/>
-                        </div>
-                    ))
-                }
+            <div className="container-fluid">
+                <div className="container">
+                    <div className="row">
+                        <label htmlFor="filtroUsuarios" className="form-label fw-bold">Buscador de reservas por id de reserva</label>
+                        <input className="form-control w-50" type="text" name="usuario" value={BuscarReserva} placeholder="Introduce el id de la reserva" onChange={inputReserva}/>
+                        <button className="btn btn-primary w-25" type="submit" onClick={filtrarReservas}>Buscar usuario</button>
+                        <button className="btn btn-outline-primary w-25" type="reset" onClick={resetFilter}>Borrar filtro</button>
+                    </div>
+                </div>
             </div>
+
+
+            <div className="container-fluid my-5">
+                <div className="container">
+                        {filtroError && <div><p>{filtroError}</p></div>}
+                        {sacarValor && sacarValor.map(reserva => (
+                            <div key={reserva._id} className="row bg-light p-5 rounded shadow">
+                                {filtroCorrecto && <div><h3>{filtroCorrecto}</h3></div>}
+                                <div className="d-flex flex-nowrap">
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>Reserva realizada a fecha de:</h4>
+                                        <p>{moment(reserva.fecha).format("LLL")}</p>
+                                    </div>
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>iD del usuario</h4>
+                                        <p>{reserva.idUsuario}</p>
+                                    </div>
+                                    <div className="col-4 flex-nowrap">
+                                        <h4>iD de la Pista</h4>
+                                        <p>{reserva.idPista}</p>
+                                    </div>                    
+                                </div>
+
+                            </div>
+                        ))}
+                </div>
+            </div>
+
         </div>
     )
 }
