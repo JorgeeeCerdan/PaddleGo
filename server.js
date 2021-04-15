@@ -5,6 +5,7 @@ const express = require(`express`)
 const server = express()
 const cors = require(`cors`)
 const morgan = require(`morgan`)
+const path = require('path')
 
 // Importación de rutas
 const usuarioRouter = require("./routes/usuarioRouter")
@@ -34,6 +35,7 @@ mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifie
     server.use(morgan(`dev`)) 
     server.use(express.json())
     server.use(express.urlencoded())
+    server.use(express.static(path.join(__dirname, "client", "build")))
     server.use(usuarioRouter)
     server.use(pistaRouter)
     server.use(reservaRouter)
@@ -41,6 +43,6 @@ mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifie
     // Bienvenida
     server.get("/", (req, res) => res.status(200).send({ message: `Bienvenido, servidor encendido en el puerto ${PORT}`}))
     // Página consultada no existente
-    server.use(`*`, (req, res) => res.status(404).send({message:`Error 404. La página no existe`}))
+    server.use(`*`, (req, res) => res.sendFile(path.join(__dirname, "client", "build", "index.html")))
     // Poner en escucha al server
     server.listen(PORT, () => {console.log(`Servidor corriendo en el puerto ${PORT}`)})
