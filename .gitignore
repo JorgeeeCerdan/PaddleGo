@@ -11,9 +11,6 @@ node_modules/
 # testing
 /coverage
 
-# consts
-constants/
-
 # production
 /build
 
