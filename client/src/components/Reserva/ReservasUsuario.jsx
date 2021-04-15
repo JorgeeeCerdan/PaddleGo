@@ -13,7 +13,6 @@ const ReservasUsuario = () => {
     const [reservasUsuarioError, setReservasUsuarioError] = useState("")
     const [reservasUsuarioDeleteCorrecto, setReservasUsuarioDeleteCorrecto] = useState("")
     const [reservasUsuarioDeleteError, setReservasUsuarioDeleteError] = useState("")
-    console.log(reservasUsuario)
 
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)

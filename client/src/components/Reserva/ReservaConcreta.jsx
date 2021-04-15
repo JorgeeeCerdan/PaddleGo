@@ -6,7 +6,6 @@ import "moment/locale/es"
 
 const ReservaConcreta = (props) => {
 
-    console.log(props)
     const [reservaUnica, setReservaUnica] = useState({
         fecha : "",
         idUsuario: "",

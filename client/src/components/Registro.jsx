@@ -36,7 +36,6 @@ const Registro = () => {
         })
         .catch( error => {
             setErrorRegister(error.response.data.message)
-            console.log(error.response.data.message)
         })
     }
 

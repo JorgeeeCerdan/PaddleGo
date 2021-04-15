@@ -113,7 +113,7 @@ reservaRouter.get("/reservas/pista/:id", comprobarToken, (req, res)=>{
 reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{
     const { params: { id } } = req
     validationId(id)
-    console.log(id)
+
     Reserva.findById(id, (err, reserva) =>{
         if(err) return res.status(400).send({message:'No se pudo borrar la reserva'})
         if(reserva.idUsuario != req.usuario.sub) return res.status(401).send({message:`Solamente quien hizo la reserva puede borrarla`})

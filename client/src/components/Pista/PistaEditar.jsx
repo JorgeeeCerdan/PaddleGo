@@ -18,7 +18,6 @@ const PistaEditar = ({datosPista, setPistaAReservar}) => {
     
         axios.put(`http://localhost:5000/pista/${infoPista._id}`, pistaModificada, config)
         .then(response => {
-            console.log(response.data.message)
             setPistaModificadaCorrecto(response.data.message)
             setPistaAReservar(response.data.pistaActualizada)
             setTimeout(() => {

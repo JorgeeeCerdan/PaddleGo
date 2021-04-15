@@ -39,12 +39,11 @@ const PistaReserva = (props) => {
         axios.get(`http://localhost:5000/pista/${props.match.params.id}` , config)
         .then( response => {
             if (response.data.pista == null) {
-                return console.log("La pista seleccionada no existe")
+                return reservaRealizarError("La pista seleccionada no existe")
             }
-            console.log(response.data)
             setPistaAReservar(response.data.pista)
         })
-        .catch( error => console.log( error.response.data.message) )
+        .catch( error => reservaRealizarError(error.response.data.message) )
     }
     
     const borrarPista = (event) => {
