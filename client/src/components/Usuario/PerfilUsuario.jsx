@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx';
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import PerfilEditar from './PerfilEditar.jsx';
@@ -17,7 +17,7 @@ const PerfilUsuario = () =>{
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization : `Bearer ${token}` } }
         
-        axios.get(`http://localhost:5000/usuario`, config)
+        axios.get(`${HEROKU_URL}/usuario`, config)
         .then(response => {
             setPerfilUsuario(response.data.usuario)
             setPerfilCorrecto(response.data.message)

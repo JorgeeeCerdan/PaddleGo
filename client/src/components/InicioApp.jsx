@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Link, useHistory} from 'react-router-dom'
 import axios from 'axios'
-import { ACCESS_TOKEN_NAME } from '../constants/constants'
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../constants/constants'
 import NavbarApp from './NavbarApp'
 
 const InicioApp = () => {
@@ -15,7 +15,7 @@ const InicioApp = () => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization : `Bearer ${token}` } }
         
-        axios.get(`http://localhost:5000/usuario`, config)
+        axios.get(`${HEROKU_URL}/usuario`, config)
         .then(response => {
             setBienvenidoUsuario(response.data.usuario.nombre)
             setBienvenidoCorrecto(response.data.message)

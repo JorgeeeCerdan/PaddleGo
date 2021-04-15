@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import FiltroUsuarios from './FiltroUsuarios.jsx';
-import { ACCESS_TOKEN_NAME } from '../../constants/constants';
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
 
 const Usuarios = () =>{
 
@@ -11,7 +11,7 @@ const Usuarios = () =>{
     useEffect(() => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = {headers:{Authorization:`Bearer ${token}`}}
-        axios.get("http://localhost:5000/usuarios", config)
+        axios.get(`${HEROKU_URL}/usuarios`, config)
         .then(response => {
             setUsuarios(response.data.usuarios)
             setUsuariosCorrecto(response.data.message)

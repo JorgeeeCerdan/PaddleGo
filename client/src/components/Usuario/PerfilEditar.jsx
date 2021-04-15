@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import { ACCESS_TOKEN_NAME } from '../../constants/constants';
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
 import axios from 'axios'
 
 const PerfilEditar = (props) =>{
@@ -16,7 +16,7 @@ const PerfilEditar = (props) =>{
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = {headers:{Authorization : `Bearer ${token}`}}
 
-        axios.put("http://localhost:5000/usuario", usuarioModificado, config)
+        axios.put(`${HEROKU_URL}/usuario`, usuarioModificado, config)
         .then(response => {
             setTimeout(() => {
                 props.setPerfilUsuario(response.data.bodyActualizado)
