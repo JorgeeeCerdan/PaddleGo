@@ -7,7 +7,6 @@ import { ACCESS_TOKEN_NAME } from '../../constants/constants';
 const Usuarios = () =>{
 
     const [usuarios, setUsuarios] = useState([])
-    console.log(usuarios)
 
     useEffect(() => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)

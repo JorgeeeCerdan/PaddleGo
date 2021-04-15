@@ -10,9 +10,6 @@ const FiltroReservas = ({reservas}) => {
     const [sacarValor, setSacarValor] = useState([...todasReservas])
     const [filtroCorrecto, setFiltroCorrecto] = useState("")
     const [filtroError, setFiltroError] = useState("")
-
-    console.log(BuscarReserva)
-
     
     const inputReserva = (event) => setBuscarReserva(event.target.value)
 

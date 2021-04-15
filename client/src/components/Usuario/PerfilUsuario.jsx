@@ -20,7 +20,6 @@ const PerfilUsuario = () =>{
         axios.get(`http://localhost:5000/usuario`, config)
         .then(response => {
             setPerfilUsuario(response.data.usuario)
-            console.log(response.data.message)
             setPerfilCorrecto(response.data.message)
             history.push("/usuario")
         })

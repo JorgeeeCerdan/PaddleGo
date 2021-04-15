@@ -111,7 +111,6 @@ pistaRouter.put("/pista/:id", comprobarToken, (req, res) => {
 pistaRouter.delete("/pista/:id", comprobarToken, (req, res) => {
     const { params: { id } } = req
     validationId(id)
-    console.log(id)
 
     Reserva.find({}, (error, unaReserva) => {
         const filtroReservaPista = unaReserva.filter(prueba => prueba.idPista == id)
