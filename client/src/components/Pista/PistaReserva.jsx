@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
-import { ACCESS_TOKEN_NAME } from '../../constants/constants';
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import PistaEditar from '../Pista/PistaEditar.jsx'
@@ -36,7 +36,7 @@ const PistaReserva = (props) => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
         
-        axios.get(`http://localhost:5000/pista/${props.match.params.id}` , config)
+        axios.get(`${HEROKU_URL}/pista/${props.match.params.id}` , config)
         .then( response => {
             if (response.data.pista == null) {
                 return reservaRealizarError("La pista seleccionada no existe")
@@ -52,7 +52,7 @@ const PistaReserva = (props) => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}      
 
-        axios.delete(`http://localhost:5000/pista/${pistaId.id}`, config)
+        axios.delete(`${HEROKU_URL}/pista/${pistaId.id}`, config)
         .then( response => {
             setReservaBorrarCorrecto(response.data.message)
             setTimeout(() => {
@@ -67,7 +67,7 @@ const PistaReserva = (props) => {
         event.preventDefault()
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = {headers:{Authorization:`Bearer ${token}`}}
-        axios.post("http://localhost:5000/reserva", realizarReserva, config)
+        axios.post(`${HEROKU_URL}/reserva`, realizarReserva, config)
         .then(response => {
             setReservaRealizarCorrecto(response.data.message)
             setRealizarReserva(response.data.pista)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
-import { ACCESS_TOKEN_NAME } from '../../constants/constants.jsx'
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx'
 import { useHistory } from 'react-router'
 import moment from 'moment'
 import 'moment/locale/es'
@@ -18,7 +18,7 @@ const ReservasUsuario = () => {
         const token = localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers : { Authorization : `Bearer ${token}` }}
 
-        axios.get(`http://localhost:5000/reservas/usuario`, config)
+        axios.get(`${HEROKU_URL}/reservas/usuario`, config)
         .then( response => {
             if(response.data.reservas.length <= 0) return setReservasUsuarioError("No tienes ninguna pista reservada")
             // const prueba = response.data
@@ -41,7 +41,7 @@ const ReservasUsuario = () => {
         const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
         const config = { headers: { Authorization: `Bearer ${token}`}}
         
-        axios.delete(`http://localhost:5000/reserva/${idBorrarReserva.id}`, config)
+        axios.delete(`${HEROKU_URL}/reserva/${idBorrarReserva.id}`, config)
         .then(response => {
             setReservasUsuarioDeleteCorrecto(response.data.message)
             setTimeout(() => {

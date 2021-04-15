@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
-import {ACCESS_TOKEN_NAME} from "../constants/constants.jsx"
+import {ACCESS_TOKEN_NAME, HEROKU_URL} from "../constants/constants.jsx"
 import setAuthToken from '../utility/AuthToken.jsx';
 import NavbarHome from './NavbarHome.jsx';
 import Footer from './Footer.jsx';
@@ -25,7 +25,7 @@ const Registro = () => {
     const history = useHistory()
     const submitForm = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/registro', {...userRegister})
+        axios.post(`${HEROKU_URL}/registro`, {...userRegister})
         .then( response => {
             setCorrectRegister(response.data.message)
             setAuthToken(response.data.token)
