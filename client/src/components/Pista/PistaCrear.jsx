@@ -26,9 +26,7 @@ const PistaCrear = () => {
         .then( response => {
             setCrearPistCorrecto(response.data.message)
             setCrearPista(response.data.pista)
-            setTimeout(() => {
-                history.go("/pistas")
-            }, 100);
+            history.go("/pistas")
         })
         .catch( error => { 
             setCrearPistaError(error.response.data.message)

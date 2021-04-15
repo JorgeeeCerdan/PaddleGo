@@ -21,12 +21,14 @@ const ReservasUsuario = () => {
 
         axios.get(`http://localhost:5000/reservas/usuario`, config)
         .then( response => {
-            if (response.data.reservas.length <= 0) {
-                setReservasUsuarioError("No tienes ninguna pista reservada")
-            }else{
+            if(response.data.reservas.length <= 0) return setReservasUsuarioError("No tienes ninguna pista reservada")
+            // const prueba = response.data
+            // console.log(prueba)
+            // if (!prueba) return setReservasUsuarioError("Aloooohaaaa!! No tienes ninguna pista reservada")
+
                 setReservasUsuario(response.data.reservas)
                 setReservasUsuarioCorrecto(response.data.message)
-            }
+            
         })
         .catch( error => {
             setReservasUsuarioError(error.response.data.message)
@@ -69,7 +71,7 @@ const ReservasUsuario = () => {
             <div className="container-fluid">
                 <div className="container">
                     <div className="row">
-                        {reservasUsuario.map( reserva => (
+                        {reservasUsuario && reservasUsuario.map( reserva => (
                             <div key={reserva._id} className="text-decoration-none col-sm-12 col-md-6 col-lg-4 p-5 m-4 rounded shadow flex-fill">
                                 <div>
                                     <h3>Reserva realizada a fecha de…</h3>

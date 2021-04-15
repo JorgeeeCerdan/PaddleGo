@@ -22,9 +22,7 @@ const PerfilUsuario = () =>{
             setPerfilUsuario(response.data.usuario)
             console.log(response.data.message)
             setPerfilCorrecto(response.data.message)
-            setTimeout(() => {
-                history.push("/usuario")
-            }, 1000);
+            history.push("/usuario")
         })
         .catch(error => {
             setPerfilError(error.response.data.usuario)
@@ -68,7 +66,7 @@ const PerfilUsuario = () =>{
             
             <PerfilEditar datosUsuario={perfilUsuario} setPerfilUsuario={setPerfilUsuario}/>
             <CerrarSesion />
-            <BorrarUsuario setPerfilUsuario={setPerfilUsuario}/>
+            <BorrarUsuario setPerfilUsuario={setPerfilUsuario} perfilUsuario={perfilUsuario}/>
 
         </Fragment>
     )

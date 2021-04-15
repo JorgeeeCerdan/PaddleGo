@@ -18,9 +18,7 @@ const Pistas = () => {
         
         axios.get("http://localhost:5000/pistas", config)
         .then(response => {
-            if(response.data.pistas.length < 1){
-                setPistasError("Añade una pista para que tus usuarios puedan reservarla")
-            }
+            if(response.data.pistas.length < 1) setPistasError("Añade una pista para que tus usuarios puedan reservarla")
             setPistasCorrecto(response.data.message)
             setPistas(response.data.pistas)
         })
@@ -37,8 +35,8 @@ const Pistas = () => {
                 <div className="container">
                     <div className="row">
                        <div className="col-sm-12 col-md-6 col-lg-4 py-4 ">
-                            {pistasCorrecto && <h1 className="fw-bold">{pistasCorrecto}</h1>}
-                            {pistasError && <h1 className="fw-bold">{pistasError}</h1>}
+                            {pistasCorrecto && <h1 className="mt-5"><p>{pistasCorrecto}</p></h1>}
+                            {pistasError && <h1 className="mt-5"><p>{pistasError}</p></h1>}
                         </div>
                     </div>
                 </div>

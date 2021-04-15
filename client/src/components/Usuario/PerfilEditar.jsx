@@ -21,7 +21,7 @@ const PerfilEditar = (props) =>{
             setTimeout(() => {
                 props.setPerfilUsuario(response.data.bodyActualizado)
                 setModificacionCorrecta(response.data.message)
-                history.go("/usuario")
+                history.push("/usuario")
             }, 1000);
         })
         .catch(error => setModificacionError(error.response.data.message))

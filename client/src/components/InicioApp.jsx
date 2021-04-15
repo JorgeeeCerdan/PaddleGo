@@ -47,7 +47,7 @@ const InicioApp = () => {
             <div className="container-fluid mb-5">
                 <div className="container">
                     <div className="row">                
-                        <div className="col-sm-12 col-md-6 col-lg-4 p-5 my-4 me-4 ms-4 rounded shadow flex-fill" >
+                        <div className="col-sm-12 col-md-6 col-lg-4 p-5 mt-4 me-4 ms-4 rounded shadow flex-fill" >
                             <Link to={"/pistas"} className="text-decoration-none">
                                 <img className="img-fluid " src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/271/tennis_1f3be.png" alt="Pelota de tenis/padel"/>
                                 <h2 className="text-start pt-2 pb-2 text-break fw-bold text-dark" >Reserva de pistas</h2>

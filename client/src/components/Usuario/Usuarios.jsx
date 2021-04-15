@@ -40,7 +40,6 @@ const Usuarios = () =>{
 
             <FiltroUsuarios usuarios={usuarios}/>
 
-
             <div className="container-fluid">
                 <div className="container">
                     <table className="table table-responsive">

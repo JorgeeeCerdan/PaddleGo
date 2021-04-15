@@ -33,7 +33,7 @@ const FiltroReservas = ({reservas}) => {
         setSacarValor([])
         setBuscarReserva([])
         setFiltroError("")
-        history.go("/reservas")
+        history.push("/reservas")
     }
 
 

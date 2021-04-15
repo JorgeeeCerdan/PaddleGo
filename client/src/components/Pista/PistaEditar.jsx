@@ -22,7 +22,7 @@ const PistaEditar = ({datosPista, setPistaAReservar}) => {
             setPistaModificadaCorrecto(response.data.message)
             setPistaAReservar(response.data.pistaActualizada)
             setTimeout(() => {
-                history.go("/pistas")
+                history.push("/pistas")
             }, 1500);
         })  
         .catch(error => setPistaModificadaError(error.response.data.message))

@@ -28,7 +28,7 @@ const FiltroUsuarios = (props) => {
         setSacarUsuario([])
         setBuscarUsuario([])
         setFiltroError("")
-        history.go("/usuarios")
+        history.push("/usuarios")
     }
 
     return(

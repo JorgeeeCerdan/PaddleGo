@@ -319,47 +319,30 @@ reservaRouter.delete("/reserva/:id", comprobarToken, (req,res)=>{})
 
 ### Dependencias Backend
 
-- Node v15.10.0
-
-- express v4.17.1
-
-- nodemon v2.0.7
-
-- dotenv v8.2.0
-
-- mongoose v5.11.18
-
-- morgan v1.10.0
-
-- moment v2.29.1
-
-- validator v13.5.2
-
-- bcrypt v5.0.1
-
-- jsonwebtoken v8.5.1
-
-- concurrently 6.0.0
-
-- cors 2.8.5
+    "bcrypt": "^5.0.1",
+    "concurrently": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.18",
+    "morgan": "^1.10.0",
+    "validator": "^13.5.2"
+    "nodemon": "^2.0.7"
+    
 
 ### Dependencias Frontend 
-
-- axios 0.21.1
-
-- moment 2.29.1
-
-- react 17.0.2
-
-- react-dom 17.0.2
-
-- react-router-dom 5.2.0
-
-- react-scripts 4.0.3
-
-- react-select 4.3.0
-
-- web-vitals 1.1.1
+    
+    "axios": "^0.21.1",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-modal": "^3.13.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-select": "^4.3.0",
+    "web-vitals": "^1.1.1"
 
 
 ## Scripts disponibles
@@ -380,24 +363,8 @@ Html, Bootstrap 5, Javascript, Node.js, Npm, Express, Mongoose, React, Axios, Po
 
 # TODO
 
-- Eleccion de fecha y hora.
-
-- Reserva la hora a la que quieres jugar entre las disponibles. 
-
-- uuid Reservas
-
-- Registro mediante redes sociales (passport npm)
-
-- Añadir metodo de pago
+- Reserva por fecha y hora.
 
 - Roles y permisos.
 
-- Sugerir a tu centro deportivo como sistema de reservas.
-
-- Resguardo de reserva enviada al correo
-
-- Confirmacion de creacion de cuenta mediante correo
-
-- Mencion a tus amigos a para el partido.
-
-- Merchandising.
+- uuid Reservas.
