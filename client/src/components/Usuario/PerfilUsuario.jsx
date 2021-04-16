@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx';
+import { HEROKU_URL } from '../../constants/constants.jsx';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import PerfilEditar from './PerfilEditar.jsx';
@@ -14,10 +14,7 @@ const PerfilUsuario = () =>{
     const [perfilError, setPerfilError] = useState("")
     
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization : `Bearer ${token}` } }
-        
-        axios.get(`${HEROKU_URL}/usuario`, config)
+        axios.get(`${HEROKU_URL}/usuario`)
         .then(response => {
             setPerfilUsuario(response.data.usuario)
             setPerfilCorrecto(response.data.message)
@@ -26,7 +23,7 @@ const PerfilUsuario = () =>{
         .catch(error => {
             setPerfilError(error.response.data.usuario)
         })
-    },[history])
+    },[])
     
     
     return(
@@ -63,7 +60,7 @@ const PerfilUsuario = () =>{
                 </div>
             </div>
             
-            <PerfilEditar datosUsuario={perfilUsuario} setPerfilUsuario={setPerfilUsuario}/>
+            <PerfilEditar perfilUsuario={perfilUsuario} setPerfilUsuario={setPerfilUsuario}/>
             <CerrarSesion />
             <BorrarUsuario setPerfilUsuario={setPerfilUsuario} perfilUsuario={perfilUsuario}/>
 

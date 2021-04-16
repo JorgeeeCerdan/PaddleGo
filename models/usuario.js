@@ -35,16 +35,23 @@ const usuario = new Schema ({
     }
 })
 
-/*
-    // Bcrypt desdes modelo
-    usuario.pre("save", async function (next) {
-        const usuario = this
-        if (usuario.isModified("password")){
-            usuario.password = await bcrypt.hash(usuario.password, 12)
-        }
-        next()
-    })
-*/
+// usuario.pre("pre", function (next){
+//     let usuario = this
+//     if(usuario.isNew || usuario.isModified("password")){
+//         bcrypt.hash(usuario.password, 12, (err, encryptPassword) => {
+//             if(err){
+//                 next()
+//             }
+//             else{
+//                 usuario.password = encryptPassword
+//                 next()
+//             }
+//         })
+//     }
+//     else{
+//         next()
+//     }
+// })
 
 // Exportación de modelo usuario
 module.exports = Usuario = model(`Usuario`, usuario)

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx'
+import { HEROKU_URL } from '../../constants/constants.jsx'
 import axios from 'axios'
 
 const PistaEditar = ({datosPista, setPistaAReservar}) => {
@@ -13,10 +13,8 @@ const PistaEditar = ({datosPista, setPistaAReservar}) => {
 
     const modificarPista = (event) => {
         event.preventDefault()
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
     
-        axios.put(`${HEROKU_URL}/pista/${infoPista._id}`, pistaModificada, config)
+        axios.put(`${HEROKU_URL}/pista/${infoPista._id}`, pistaModificada)
         .then(response => {
             setPistaModificadaCorrecto(response.data.message)
             setPistaAReservar(response.data.pistaActualizada)

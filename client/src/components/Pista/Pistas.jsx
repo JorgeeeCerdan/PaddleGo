@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios'
-import {ACCESS_TOKEN_NAME, HEROKU_URL} from "../../constants/constants.jsx"
+import { HEROKU_URL } from "../../constants/constants.jsx"
 import { Link } from "react-router-dom";
 import NavbarApp from '../NavbarApp.jsx'
 import PistaCrear from "./PistaCrear";
@@ -13,10 +13,7 @@ const Pistas = () => {
     const [pistasError, setPistasError] = useState("")
 
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
-        
-        axios.get(`${HEROKU_URL}/pistas`, config)
+        axios.get(`${HEROKU_URL}/pistas`)
         .then(response => {
             if(response.data.pistas.length < 1) setPistasError("Añade una pista para que tus usuarios puedan reservarla")
             setPistasCorrecto(response.data.message)

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx';
+import { HEROKU_URL } from '../../constants/constants.jsx';
 import { useHistory } from 'react-router';
 
 const PistaCrear = () => {
@@ -19,10 +19,7 @@ const PistaCrear = () => {
     const history = useHistory()
     const handleCrearPista = (e) => {
         e.preventDefault();
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
-    
-        axios.post(`${HEROKU_URL}/pista`, {...crearPista}, config)
+        axios.post(`${HEROKU_URL}/pista`, {...crearPista})
         .then( response => {
             setCrearPistCorrecto(response.data.message)
             setCrearPista(response.data.pista)

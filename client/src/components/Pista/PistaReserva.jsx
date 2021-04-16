@@ -33,10 +33,7 @@ const PistaReserva = (props) => {
     }, [props.match.params.id])
 
     const getPista = () => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
-        
-        axios.get(`${HEROKU_URL}/pista/${props.match.params.id}` , config)
+        axios.get(`${HEROKU_URL}/pista/${props.match.params.id}`)
         .then( response => {
             if (response.data.pista == null) {
                 return reservaRealizarError("La pista seleccionada no existe")

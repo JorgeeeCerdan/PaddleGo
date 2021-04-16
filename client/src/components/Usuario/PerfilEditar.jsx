@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
+import { HEROKU_URL } from '../../constants/constants';
 import axios from 'axios'
 
 const PerfilEditar = (props) =>{
@@ -12,19 +12,19 @@ const PerfilEditar = (props) =>{
     const history = useHistory()
     const modificarUsuario =  (event) => {
         event.preventDefault()
-
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = {headers:{Authorization : `Bearer ${token}`}}
-
-        axios.put(`${HEROKU_URL}/usuario`, usuarioModificado, config)
+        axios.put(`${HEROKU_URL}/usuario`, usuarioModificado)
         .then(response => {
+            console.log(response.data)
+            setModificacionCorrecta(response.data.message)
+            props.setPerfilUsuario(response.data.usuarioActualizado)
             setTimeout(() => {
-                props.setPerfilUsuario(response.data.bodyActualizado)
-                setModificacionCorrecta(response.data.message)
                 history.push("/usuario")
-            }, 1000);
+            }, 1500);
         })
-        .catch(error => setModificacionError(error.response.data.message))
+        .catch(error => {
+            console.log(error)
+            setModificacionError(error.response.data.message)
+        })
 
     }
         const inputsUsuario = (event) => {
