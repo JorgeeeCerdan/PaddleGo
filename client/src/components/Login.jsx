@@ -22,8 +22,8 @@ const Login = () => {
         axios.post(`${HEROKU_URL}/login`, { ...userLogin})
         .then( response => {
             setLoginCorrecto(response.data.message)
-            setAuthToken(response.data.token)
             localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token)
+            setAuthToken(response.data.token)
             setTimeout(() => {
                 history.push("/inicio")
             }, 2500);
