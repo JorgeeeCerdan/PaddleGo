@@ -1,7 +1,7 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants.jsx'
+import { HEROKU_URL } from '../../constants/constants.jsx'
 import FiltroReservas from './FiltroReservas.jsx'
 import moment from "moment"
 import 'moment/locale/es'
@@ -13,10 +13,7 @@ const Reservas = () =>{
     const [reservasError, setReservasError] = useState("")
 
     useEffect(() => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers : { Authorization : `Bearer ${token}` }}
-
-        axios.get(`${HEROKU_URL}/reservas`, config)
+        axios.get(`${HEROKU_URL}/reservas`)
         .then(response => {
             setReservasCorrecto(response.data.message)
             setReservas(response.data.reservas)

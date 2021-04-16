@@ -3,7 +3,6 @@ import { Link, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import {ACCESS_TOKEN_NAME, HEROKU_URL} from "../constants/constants.jsx"
 import setAuthToken from '../utility/AuthToken.jsx';
-import NavbarHome from './NavbarHome.jsx';
 import Footer from './Footer.jsx';
 
 const Registro = () => {
@@ -28,8 +27,8 @@ const Registro = () => {
         axios.post(`${HEROKU_URL}/registro`, {...userRegister})
         .then( response => {
             setCorrectRegister(response.data.message)
-            setAuthToken(response.data.token)
             localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token)
+            setAuthToken(response.data.token)
             setTimeout(() => {
                 history.push("/inicio")                
             }, 1000);

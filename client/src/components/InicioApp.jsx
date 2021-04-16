@@ -12,10 +12,7 @@ const InicioApp = () => {
     const history = useHistory()
 
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization : `Bearer ${token}` } }
-        
-        axios.get(`${HEROKU_URL}/usuario`, config)
+        axios.get(`${HEROKU_URL}/usuario`)
         .then(response => {
             setBienvenidoUsuario(response.data.usuario.nombre)
             setBienvenidoCorrecto(response.data.message)

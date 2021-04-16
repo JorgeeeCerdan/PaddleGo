@@ -38,10 +38,8 @@ const ReservasUsuario = () => {
     const handleBorrarReserva = (event) => {
         event.preventDefault();
         const idBorrarReserva = {id : event.target.value}
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
         
-        axios.delete(`${HEROKU_URL}/reserva/${idBorrarReserva.id}`, config)
+        axios.delete(`${HEROKU_URL}/reserva/${idBorrarReserva.id}`)
         .then(response => {
             setReservasUsuarioDeleteCorrecto(response.data.message)
             setTimeout(() => {

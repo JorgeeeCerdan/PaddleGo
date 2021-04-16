@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
+import { HEROKU_URL } from '../../constants/constants';
 import moment from 'moment'
 import "moment/locale/es"
 
@@ -15,10 +15,7 @@ const ReservaConcreta = (props) => {
     const [reservaConcretaError, setReservaConcretaError] = useState("")
     
     useEffect(() => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { headers: { Authorization: `Bearer ${token}`}}
-        
-        axios.get(`${HEROKU_URL}/pista/${props.match.params.id}` , config)
+        axios.get(`${HEROKU_URL}/pista/${props.match.params.id}`)
         .then( response => {
             if (response.data.reserva == null) {
                 return setReservaConcretaError("La pista seleccionada no existe")

@@ -34,7 +34,7 @@ mongoose.connect(MONGO_URL,{useNewUrlParser:true, useCreateIndex:true, useUnifie
     server.use(cors())
     server.use(morgan(`dev`)) 
     server.use(express.json())
-    server.use(express.urlencoded())
+    server.use(express.urlencoded({extended:true}))
     server.use(express.static(path.join(__dirname, "client", "build")))
     server.use(usuarioRouter)
     server.use(pistaRouter)

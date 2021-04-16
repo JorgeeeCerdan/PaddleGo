@@ -2,16 +2,14 @@ import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import FiltroUsuarios from './FiltroUsuarios.jsx';
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
+import { HEROKU_URL } from '../../constants/constants';
 
 const Usuarios = () =>{
 
     const [usuarios, setUsuarios] = useState([])
 
     useEffect(() => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = {headers:{Authorization:`Bearer ${token}`}}
-        axios.get(`${HEROKU_URL}/usuarios`, config)
+        axios.get(`${HEROKU_URL}/usuarios`)
         .then(response => {
             setUsuarios(response.data.usuarios)
             setUsuariosCorrecto(response.data.message)

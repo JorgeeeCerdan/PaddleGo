@@ -11,7 +11,7 @@ const Footer = () => {
                     </div>
 
                     <div className="col-4 pt-4 text-center">
-                    <p>Copyright © Jorge Cerdán 2021</p>
+                    <p>Jorge Cerdán 2021</p>
                     </div>
                     
                     <div className="col-4 pt-4 text-center">

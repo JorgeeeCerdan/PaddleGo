@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {useHistory} from 'react-router-dom'
 import axios from 'axios'
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants'
+import { HEROKU_URL } from '../../constants/constants'
 import Modal from 'react-modal'
 
 const BorrarUsuario = ({setPerfilUsuario, perfilUsuario}) => {
@@ -14,10 +14,7 @@ const BorrarUsuario = ({setPerfilUsuario, perfilUsuario}) => {
     const closeModal = () => setModalIsOpen(false)
     
     const handleDelete = () => {
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = { header: { Authorization: `Bearer ${token}`}}
-        
-        axios.delete(`${HEROKU_URL}/usuario`, config)
+        axios.delete(`${HEROKU_URL}/usuario`)
         .then(response => {
             setPerfilUsuario(response.data)
             closeModal()
