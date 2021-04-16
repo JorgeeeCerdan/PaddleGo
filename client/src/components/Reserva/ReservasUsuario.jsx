@@ -45,7 +45,7 @@ const ReservasUsuario = () => {
         .then(response => {
             setReservasUsuarioDeleteCorrecto(response.data.message)
             setTimeout(() => {
-                history.go("/reservas/usuario")
+                history.push("/reservas/usuario")
             }, 1000);
         })
         .catch(error => {
