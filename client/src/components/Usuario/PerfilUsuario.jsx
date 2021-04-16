@@ -26,7 +26,7 @@ const PerfilUsuario = () =>{
         .catch(error => {
             setPerfilError(error.response.data.usuario)
         })
-    },[])
+    },[history])
     
     
     return(
