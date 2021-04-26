@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
-import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../constants/constants.jsx'
+import { ACCESS_TOKEN_NAME, DEV_URL, HEROKU_URL } from '../constants/constants.jsx'
 import setAuthToken from '../utility/AuthToken.jsx';
 import Footer from './Footer.jsx';
 

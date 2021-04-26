@@ -18,7 +18,8 @@ const authToken = {
 
     // Comprobación de Token
     comprobarToken(req, res, next){
-        const token = req.headers[ "Authorization"]
+        const token = req.headers[ "authorization"]
+        console.log(req.headers)
         if(!token) return res.status(401).send({message:`Se requiere autorización`})
         jwt.verify(token.split(" ")[1], SECRET, (error, decoded) =>{
             if(error) return res.status(401).send({message : `Inicia sesión para renovar tu autorización`})

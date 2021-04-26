@@ -21,13 +21,8 @@ const ReservasUsuario = () => {
         axios.get(`${HEROKU_URL}/reservas/usuario`, config)
         .then( response => {
             if(response.data.reservas.length <= 0) return setReservasUsuarioError("No tienes ninguna pista reservada")
-            // const prueba = response.data
-            // console.log(prueba)
-            // if (!prueba) return setReservasUsuarioError("Aloooohaaaa!! No tienes ninguna pista reservada")
-
-                setReservasUsuario(response.data.reservas)
-                setReservasUsuarioCorrecto(response.data.message)
-            
+            setReservasUsuario(response.data.reservas)
+            setReservasUsuarioCorrecto(response.data.message)
         })
         .catch( error => {
             setReservasUsuarioError(error.response.data.message)
