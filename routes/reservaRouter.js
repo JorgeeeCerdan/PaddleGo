@@ -48,14 +48,16 @@ reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
     try{
         const idUsuario =  req.usuario.sub;
         const idPista =  req.body.idPista;
+        const fecha =  req.body.fecha;
 
         validationReserva(idUsuario, idPista)
-
+        
         const reserva =  new Reserva({
             idUsuario:idUsuario,
-            idPista:idPista
+            idPista:idPista,
+            fecha:fecha
         })
-
+        
         reserva.save()
         .then(reserva => {
             if(reserva) res.status(200).send({message : `Reserva creada correctamente`, reserva: reserva})

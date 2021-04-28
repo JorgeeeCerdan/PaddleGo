@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Link, useHistory} from 'react-router-dom'
 import axios from 'axios'
-import { ACCESS_TOKEN_NAME, DEV_URL, HEROKU_URL } from '../constants/constants'
+import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../constants/constants'
 import NavbarApp from './NavbarApp'
 
 const InicioApp = () => {

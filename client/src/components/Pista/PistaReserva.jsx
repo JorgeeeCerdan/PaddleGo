@@ -4,7 +4,10 @@ import { ACCESS_TOKEN_NAME, HEROKU_URL } from '../../constants/constants';
 import axios from 'axios'
 import NavbarApp from '../NavbarApp.jsx'
 import PistaEditar from '../Pista/PistaEditar.jsx'
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment'
+import 'moment/locale/es'
 
 const PistaReserva = (props) => {
 
@@ -14,33 +17,35 @@ const PistaReserva = (props) => {
         ubicacion:"",
         capacidad:""    
     })
-    const [realizarReserva, setRealizarReserva] = useState({
-        fecha : "",
-        idUsuario : "",
-        idPista : props.match.params.id
-    })
     
     const [reservaBorrarCorrecto, setReservaBorrarCorrecto] = useState("")
     const [reservaBorrarError, setReservaBorrarError] = useState("")
     const [reservaRealizarCorrecto, setReservaRealizarCorrecto] = useState("")
     const [reservaRealizarError, setReservaRealizarError] = useState("")
+    const [startDate, setStartDate] = useState();
+
+    const realizarReserva = {
+        fecha : startDate,
+        idPista : props.match.params.id
+    }
 
     const history = useHistory()
-    
-    
     useEffect(() => {
         getPista()
     }, [props.match.params.id])
 
     const getPista = () => {
         axios.get(`${HEROKU_URL}/pista/${props.match.params.id}`)
-        .then( response => {
-            if (response.data.pista == null) {
-                return reservaRealizarError("La pista seleccionada no existe")
+        .then(response => {
+            if(response.data.pista == null){
+                reservaRealizarError("La pista seleccionada no existe")
+            }else{
+                setPistaAReservar(response.data.pista)
             }
-            setPistaAReservar(response.data.pista)
+        }) 
+        .catch(error => {
+            reservaRealizarError(error.response.message)
         })
-        .catch( error => reservaRealizarError(error.response.data.message) )
     }
     
     const borrarPista = (event) => {
@@ -59,15 +64,12 @@ const PistaReserva = (props) => {
         .catch( error => setReservaBorrarError(error.response.data.message))
     }
 
-
     const reservar = (event) => {
         event.preventDefault()
-        const token = window.localStorage.getItem(ACCESS_TOKEN_NAME)
-        const config = {headers:{Authorization:`Bearer ${token}`}}
-        axios.post(`${HEROKU_URL}/reserva`, realizarReserva, config)
+        axios.post(`${HEROKU_URL}/reserva`, realizarReserva)
         .then(response => {
             setReservaRealizarCorrecto(response.data.message)
-            setRealizarReserva(response.data.pista)
+            console.log(response.data)
             setTimeout(() => {
                 history.push("/reservas/usuario")
             }, 1000);
@@ -100,10 +102,30 @@ const PistaReserva = (props) => {
                             <p><b>Tipo: </b>{PistaAReservar.tipo}</p>
                             <p><b>Ubicación: </b>{PistaAReservar.ubicacion}</p>
                             <p><b>Capacidad: </b>{PistaAReservar.capacidad} Personas</p>
+
+                            <form onSubmit={setStartDate} className="">
+                                <label className="form-label mb-3"><b>Reserva hora aqui:</b></label>
+                                <br/>
+                                <DatePicker
+                                    required
+                                    inline
+                                    className="form-control mb-3"
+                                    placeholderText="Decide día y hora"
+                                    locale="es"
+                                    selected={startDate}
+                                    onChange={date => setStartDate(date)}
+                                    minDate={moment().toDate()}
+                                    showTimeSelect
+                                    timeCaption="Hora"
+                                    timeFormat="HH:mm"
+                                    timeIntervals={60}
+                                    dateFormat="dd/MM/yyyy h:mm aa"
+                                />
+                            </form>
                         </div>
                         <div className="col-sm-6">
-                            <button className="btn mb-4 w-100 btn-primary" type="submit" value={props.match.params.id} onClick={reservar}>Realizar reserva</button>
-                            <button className="btn mb-4 w-100 btn-outline-primary" type="submit" value={props.match.params.id} onClick={borrarPista}>Borrar pista</button>
+                            <button className="btn mb-4 w-100 btn-primary" type="submit" value={realizarReserva} onClick={reservar}>Realizar reserva</button>
+                            <button className="btn mb-4 w-100 btn-outline-primary" type="submit" value={realizarReserva} onClick={borrarPista}>Borrar pista</button>
                         </div>
                     </div>
                 </div>

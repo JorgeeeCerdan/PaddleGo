@@ -12,8 +12,7 @@ const reserva = new Schema ({
         ref: `Pista`
     },
     fecha:{
-        type: String,
-        default: Date()
+        type: Date
     }
 })
 
