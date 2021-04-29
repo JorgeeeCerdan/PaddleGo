@@ -5,6 +5,7 @@ import { HEROKU_URL } from '../../constants/constants.jsx'
 import FiltroReservas from './FiltroReservas.jsx'
 import moment from "moment"
 import 'moment/locale/es'
+import ValidationReserva from './ValidationReserva.jsx'
 
 const Reservas = () =>{
 
@@ -34,6 +35,7 @@ const Reservas = () =>{
                     </div>
                 </div>
 
+                <ValidationReserva reservas={reservas}/>
                 <FiltroReservas reservas={reservas}/>
 
                 <div className="container-fluid">
@@ -41,8 +43,8 @@ const Reservas = () =>{
                         <table className="table table-responsive">
                             <thead>
                                 <tr>
-                                    <th scope="col">Reserva realizada a fecha de</th>
-                                    <th scope="col">idReserva</th>
+                                    <th scope="col">Fecha de la reserva</th>
+                                    <th scope="col">Codigo de la reserva</th>
                                     <th scope="col">idUsuario</th>
                                     <th scope="col">idPista</th>
                                 </tr>
@@ -51,7 +53,7 @@ const Reservas = () =>{
                             {reservas.map( element => (
                                 <tr key={element._id}>
                                     <td>{moment(element.fecha).format("LLL")}</td>
-                                    <td>{element._id}</td>
+                                    <td>{element.codigoReserva}</td>
                                     <td>{element.idUsuario}</td>
                                     <td>{element.idPista}</td>
                                 </tr>
@@ -60,7 +62,6 @@ const Reservas = () =>{
                         </table>
                     </div>
                 </div>
-
             </div>
         </Fragment>
     )
