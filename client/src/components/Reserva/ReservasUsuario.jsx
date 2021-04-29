@@ -6,7 +6,6 @@ import { useHistory } from 'react-router'
 import moment from 'moment'
 import 'moment/locale/es'
 
-
 const ReservasUsuario = () => {
 
     const [reservasUsuario, setReservasUsuario] = useState([])
@@ -14,7 +13,6 @@ const ReservasUsuario = () => {
     const [reservasUsuarioError, setReservasUsuarioError] = useState("")
     const [reservasUsuarioDeleteCorrecto, setReservasUsuarioDeleteCorrecto] = useState("")
     const [reservasUsuarioDeleteError, setReservasUsuarioDeleteError] = useState("")
-    console.log(reservasUsuario)
     
     useEffect(() => {
         axios.get(`${HEROKU_URL}/reservas/usuario`)
@@ -67,6 +65,8 @@ const ReservasUsuario = () => {
                                 <div>
                                     <p><b>Dia y hora de la reserva</b></p>
                                     <p className="text-body">{moment(reserva.fecha).format('LLL')}</p>
+                                    <p><b>Codigo de la reserva</b></p>
+                                    <p className="text-body">{reserva.codigoReserva}</p>
                                     <p><b>Pista reservada</b></p>
                                     <p className="text-body">{reserva.idPista.nombre} - {reserva.idPista.ubicacion} - {reserva.idPista.tipo} - {reserva.idPista.capacidad} Personas</p>
                                 </div>
@@ -79,7 +79,6 @@ const ReservasUsuario = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

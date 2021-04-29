@@ -13,6 +13,7 @@ const NavbarApp = () =>{
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
+                    <Link className="nav-link mx-4 text-dark" to={"/reservas"}>Reservas registradas</Link>
                     <Link className="nav-link mx-4 text-dark" to={"/usuarios"}>Usuarios registrados</Link>
                     <Link className="nav-link mx-4 text-dark" to={"/usuario"}>Perfil de usuario</Link>
                     <Link className="nav-link mx-4 text-dark" to={"/reservas/usuario"}>Historial de reservas</Link>

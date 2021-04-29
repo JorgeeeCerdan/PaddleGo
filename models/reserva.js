@@ -13,6 +13,9 @@ const reserva = new Schema ({
     },
     fecha:{
         type: Date
+    },
+    codigoReserva:{
+        type: String
     }
 })
 

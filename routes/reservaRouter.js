@@ -49,13 +49,15 @@ reservaRouter.post("/reserva", comprobarToken,  (req, res) => {
         const idUsuario =  req.usuario.sub;
         const idPista =  req.body.idPista;
         const fecha =  req.body.fecha;
+        const codigoReserva = req.body.codigoReserva
 
         validationReserva(idUsuario, idPista)
         
         const reserva =  new Reserva({
             idUsuario:idUsuario,
             idPista:idPista,
-            fecha:fecha
+            fecha:fecha,
+            codigoReserva:codigoReserva
         })
         
         reserva.save()

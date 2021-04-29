@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment'
 import 'moment/locale/es'
+import { v4 as uuidv4 } from 'uuid';
 
 const PistaReserva = (props) => {
 
@@ -26,7 +27,8 @@ const PistaReserva = (props) => {
 
     const realizarReserva = {
         fecha : startDate,
-        idPista : props.match.params.id
+        idPista : props.match.params.id,
+        codigoReserva: uuidv4()
     }
 
     const history = useHistory()
@@ -69,7 +71,6 @@ const PistaReserva = (props) => {
         axios.post(`${HEROKU_URL}/reserva`, realizarReserva)
         .then(response => {
             setReservaRealizarCorrecto(response.data.message)
-            console.log(response.data)
             setTimeout(() => {
                 history.push("/reservas/usuario")
             }, 1000);
@@ -130,9 +131,7 @@ const PistaReserva = (props) => {
                     </div>
                 </div>
             </div>
-
             <PistaEditar datosPista={PistaAReservar} setPistaAReservar={setPistaAReservar}/>
-
         </Fragment>
     )
 }
